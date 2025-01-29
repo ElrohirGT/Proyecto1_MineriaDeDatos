@@ -28,7 +28,19 @@ summary(datos)
 ## Preguntas
 (Son 16 más 3 y 3 extras. Las primeras 8+3 Flavio las demás Prince)
 
-¿Cuáles son las 10 películas que contaron con más presupuesto?
+### ¿Cuáles son las 10 películas que contaron con más presupuesto?
+```{r}
+ordered_movies <- datos[order(datos$budget, decreasing = TRUE),]
+top_10_expensive_movies <- head(ordered_movies, n=10)
+top_10_expensive_movies <- top_10_expensive_movies[c("title", "budget")]
+
+colnames(top_10_expensive_movies)[1] = "Título"
+colnames(top_10_expensive_movies)[2] = "Presupuesto"
+
+top_10_expensive_movies
+```
+Como se puede ver la película con mayor presupuesto es: `r top_10_expensive_movies$Título[1]` con un presupuesto de: `r top_10_expensive_movies$Presupuesto[1]` dólares! Mientras que la última película dentro del top 10 es: `r top_10_expensive_movies$Título[10]` con un presupuesto de $`r top_10_expensive_movies$Presupuesto[10]`.
+
 ¿Cuáles son las 10 películas que más ingresos tuvieron?
 ¿Cuál es la película que más votos tuvo?
 ¿Cuál es la peor película de acuerdo a los votos de todos los usuarios?

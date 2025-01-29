@@ -143,7 +143,31 @@ barplot(vec, main="Géneros generales", las=3, col=c("#69b3a2", "#69b300", "#69b
 
 El género principal que predomina en todos los datos es Drama con una cantidad de películas del género igual a `r max(movie_genres$COUNT)`.
 
-¿A qué género principal pertenecen las películas más largas?
+### ¿A qué género principal pertenecen las películas más largas?
+```{r Pregunta 7}
+movies_by_runtime <- datos[order(datos$runtime, decreasing = TRUE),]
+
+limit <- 20
+recent_movies_20 <- head(movies_by_runtime, n=limit)
+splitted_genres <- strsplit(recent_movies_20$genres, split = "|", fixed = TRUE)
+movie_genres <- data.frame("", "")
+names(movie_genres)<- c("ID", "GENRE")
+for (idx in 1:limit) {
+  for (genre in splitted_genres[[idx]]) {
+    temp <- c(recent_movies_20$title[idx], genre)
+    names(temp) <- c("ID", "GENRE")
+    movie_genres<- rbind(movie_genres, temp)
+  }
+}
+movie_genres <- aggregate(movie_genres[,c("GENRE")], by=list(movie_genres$GENRE), FUN="length")
+names(movie_genres) <- c("GENRE", "COUNT")
+vec <- movie_genres$COUNT
+names(vec) <- movie_genres$GENRE
+barplot(vec, main="Géneros en las top 20 películas por duración", las=3, col=c("#69b3a2", "#69b300", "#69bfff"))
+```
+
+En la gráfica de arriba podemos ver los géneros de las top 20 películas más largas, como se puede ver el género de drama es el más usado y por una gran ventaja.
+
 ¿Las películas de qué genero principal obtuvieron mayores ganancias?
 ¿La cantidad de actores influye en los ingresos de las películas? ¿se han hecho películas con más actores en los últimos años?
 ¿Es posible que la cantidad de hombres y mujeres en el reparto influya en la popularidad y los ingresos de las películas?

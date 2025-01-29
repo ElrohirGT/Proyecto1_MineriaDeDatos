@@ -29,7 +29,7 @@ summary(datos)
 (Son 16 más 3 y 3 extras. Las primeras 8+3 Flavio las demás Prince)
 
 ### ¿Cuáles son las 10 películas que contaron con más presupuesto?
-```{r}
+```{r Pregunta 1}
 ordered_movies <- datos[order(datos$budget, decreasing = TRUE),]
 top_10_expensive_movies <- head(ordered_movies, n=10)
 top_10_expensive_movies <- top_10_expensive_movies[c("title", "budget")]
@@ -42,7 +42,7 @@ top_10_expensive_movies
 Como se puede ver la película con mayor presupuesto es: `r top_10_expensive_movies$Título[1]` con un presupuesto de: `r top_10_expensive_movies$Presupuesto[1]` dólares! Mientras que la última película dentro del top 10 es: `r top_10_expensive_movies$Título[10]` con un presupuesto de $`r top_10_expensive_movies$Presupuesto[10]`.
 
 ### ¿Cuáles son las 10 películas que más ingresos tuvieron?
-```{r}
+```{r Pregunta 2}
 ordered_movies <- datos[order(datos$revenue, decreasing = TRUE),]
 top_10_expensive_movies <- head(ordered_movies, n=10)
 top_10_expensive_movies <- top_10_expensive_movies[c("title", "revenue")]
@@ -57,7 +57,7 @@ Como se puede ver la película con mayores ingresos es: `r top_10_expensive_movi
 
 
 ### ¿Cuál es la película que más votos tuvo?
-```{r}
+```{r Pregunta 3}
 ordered_voted_movies <- datos[order(datos$voteCount, decreasing = TRUE),]
 top_voted_movie <- head(ordered_voted_movies, n=1)
 ```
@@ -65,7 +65,7 @@ top_voted_movie <- head(ordered_voted_movies, n=1)
 La película que más votos tuvo es: `r top_voted_movie$title[1]` con una cantidad de votos igual a: `r top_voted_movie$voteCount[1]`.
 
 ### ¿Cuál es la peor película de acuerdo a los votos de todos los usuarios?
-```{r}
+```{r Pregunta 4}
 ordered_voted_movies <- datos[order(datos$voteCount, decreasing = FALSE),]
 worst_rated_movie <- head(ordered_voted_movies, n=1)
 ```
@@ -75,27 +75,73 @@ La película que menos votos tuvo es: `r worst_rated_movie$title[1]` con una can
 
 ### ¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras
 
-```{r}
+```{r Pregunta 5}
 datos$year <- substr(datos$releaseDate, start = 1, stop = 4)
 movies_by_year <- aggregate(datos[,c("year")], by=list(datos$year), FUN="length")
-movies_by_year <- movies_by_year[order(movies_by_year$x, decreasing = TRUE),]
 
 colnames(movies_by_year)[1] = "Año"
 colnames(movies_by_year)[2] = "# Películas"
 
-max_movie_count_in_years <- movies_by_year$`# Películas`[1]
-
 vec <- movies_by_year$`# Películas`
 names(vec) <- movies_by_year$Año
-barplot(head(vec, n=22), main="Películas por Año hasta 2000", las=3, col=c("#69b3a2", "#69b300", "#69bfff"))
+barplot(vec, main="Películas por Año", las=3, col=c("#69b3a2", "#69b300", "#69bfff"))
+
+movies_by_year <- movies_by_year[order(movies_by_year$`# Películas`, decreasing = TRUE),]
+max_movie_count_in_years <- movies_by_year$`# Películas`[1]
+
 ```
 
 La tendencia en general de las películas ha ido en aumento conforme pasan los años, los demás datos de 2000 hacia atrás son más y más bajos.
 
 En el año en donde más películas se han hecho es en el `r movies_by_year$Año[1]` con un total de: `r max_movie_count_in_years` películas que fueron lanzadas al cine.
 
-¿Cuál es el género principal de las 20 películas más recientes? ¿Cuál es el género principal que predomina en el conjunto de datos? Represéntelo usando un gráfico.
+### ¿Cuál es el género principal de las 20 películas más recientes? ¿Cuál es el género principal que predomina en el conjunto de datos? Represéntelo usando un gráfico.
 
+```{r Pregunta 6.1}
+datos$releaseDate <- as.Date(datos$releaseDate)
+movies_by_date <- datos[order(datos$releaseDate, decreasing = TRUE),]
+
+recent_movies_20 <- head(movies_by_date, n=20)
+splitted_genres <- strsplit(recent_movies_20$genres, split = "|", fixed = TRUE)
+movie_genres <- data.frame("", "")
+names(movie_genres)<- c("ID", "GENRE")
+for (idx in 1:20) {
+  for (genre in splitted_genres[[idx]]) {
+    temp <- c(recent_movies_20$title[idx], genre)
+    names(temp) <- c("ID", "GENRE")
+    movie_genres<- rbind(movie_genres, temp)
+  }
+}
+movie_genres <- aggregate(movie_genres[,c("GENRE")], by=list(movie_genres$GENRE), FUN="length")
+names(movie_genres) <- c("GENRE", "COUNT")
+vec <- movie_genres$COUNT
+names(vec) <- movie_genres$GENRE
+barplot(vec, main="Géneros en las top 20 películas", las=3, col=c("#69b3a2", "#69b300", "#69bfff"))
+```
+
+Los dos géneros más populares entre las últimas 20 películas son Comedia y Drama. Mientras que en todos los datos:
+```{r Pregunta 6.2}
+datos$releaseDate <- as.Date(datos$releaseDate)
+movies_by_date <- datos[order(datos$releaseDate, decreasing = TRUE),]
+
+splitted_genres <- strsplit(movies_by_date$genres, split = "|", fixed = TRUE)
+movie_genres <- data.frame("", "")
+names(movie_genres)<- c("ID", "GENRE")
+for (idx in 1:dim(movies_by_date)[1]) {
+  for (genre in splitted_genres[[idx]]) {
+    temp <- c(movies_by_date$title[idx], genre)
+    names(temp) <- c("ID", "GENRE")
+    movie_genres<- rbind(movie_genres, temp)
+  }
+}
+movie_genres <- aggregate(movie_genres[,c("GENRE")], by=list(movie_genres$GENRE), FUN="length")
+names(movie_genres) <- c("GENRE", "COUNT")
+vec <- movie_genres$COUNT
+names(vec) <- movie_genres$GENRE
+barplot(vec, main="Géneros generales", las=3, col=c("#69b3a2", "#69b300", "#69bfff"))
+```
+
+El género principal que predomina en todos los datos es Drama con una cantidad de películas del género igual a `r max(movie_genres$COUNT)`.
 
 ¿A qué género principal pertenecen las películas más largas?
 ¿Las películas de qué genero principal obtuvieron mayores ganancias?

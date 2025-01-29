@@ -75,9 +75,28 @@ La película que menos votos tuvo es: `r worst_rated_movie$title[1]` con una can
 
 ### ¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras
 
+```{r}
+datos$year <- substr(datos$releaseDate, start = 1, stop = 4)
+movies_by_year <- aggregate(datos[,c("year")], by=list(datos$year), FUN="length")
+movies_by_year <- movies_by_year[order(movies_by_year$x, decreasing = TRUE),]
 
+colnames(movies_by_year)[1] = "Año"
+colnames(movies_by_year)[2] = "# Películas"
+
+max_movie_count_in_years <- movies_by_year$`# Películas`[1]
+
+vec <- movies_by_year$`# Películas`
+names(vec) <- movies_by_year$Año
+barplot(head(vec, n=22), main="Películas por Año hasta 2000", las=3, col=c("#69b3a2", "#69b300", "#69bfff"))
+```
+
+La tendencia en general de las películas ha ido en aumento conforme pasan los años, los demás datos de 2000 hacia atrás son más y más bajos.
+
+En el año en donde más películas se han hecho es en el `r movies_by_year$Año[1]` con un total de: `r max_movie_count_in_years` películas que fueron lanzadas al cine.
 
 ¿Cuál es el género principal de las 20 películas más recientes? ¿Cuál es el género principal que predomina en el conjunto de datos? Represéntelo usando un gráfico.
+
+
 ¿A qué género principal pertenecen las películas más largas?
 ¿Las películas de qué genero principal obtuvieron mayores ganancias?
 ¿La cantidad de actores influye en los ingresos de las películas? ¿se han hecho películas con más actores en los últimos años?

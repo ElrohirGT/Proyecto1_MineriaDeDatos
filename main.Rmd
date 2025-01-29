@@ -10,7 +10,12 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Resumen del conjunto de Datos
-(Flavio)
+Los datos tienen la siguiente forma:
+```{r}
+datos <- read.csv("data/movies.csv")
+summary(datos)
+```
+
 
 ## Tipos de cada variable
 (Prince)

@@ -73,7 +73,10 @@ worst_rated_movie <- head(ordered_voted_movies, n=1)
 
 La película que menos votos tuvo es: `r worst_rated_movie$title[1]` con una cantidad de votos igual a: `r worst_rated_movie$voteCount[1]`.
 
-¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras
+### ¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras
+
+
+
 ¿Cuál es el género principal de las 20 películas más recientes? ¿Cuál es el género principal que predomina en el conjunto de datos? Represéntelo usando un gráfico.
 ¿A qué género principal pertenecen las películas más largas?
 ¿Las películas de qué genero principal obtuvieron mayores ganancias?

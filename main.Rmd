@@ -168,7 +168,33 @@ barplot(vec, main="Géneros en las top 20 películas por duración", las=3, col=
 
 En la gráfica de arriba podemos ver los géneros de las top 20 películas más largas, como se puede ver el género de drama es el más usado y por una gran ventaja.
 
-¿Las películas de qué genero principal obtuvieron mayores ganancias?
+### ¿Las películas de qué genero principal obtuvieron mayores ganancias?
+```{r Pregunta 8}
+datos$releaseDate <- as.Date(datos$releaseDate)
+movies_by_date <- datos[order(datos$releaseDate, decreasing = TRUE),]
+
+splitted_genres <- strsplit(movies_by_date$genres, split = "|", fixed = TRUE)
+movie_genres <- data.frame("", "", 0)
+titles <- c("TITLE", "GENRE", "REVENUE")
+names(movie_genres)<- titles
+for (idx in 1:dim(movies_by_date)[1]) {
+  for (genre in splitted_genres[[idx]]) {
+    temp <- c(movies_by_date$title[idx], genre, movies_by_date$revenue[idx])
+    names(temp) <- titles
+    movie_genres<- rbind(movie_genres, temp)
+  }
+}
+movie_genres <- aggregate(as.numeric(movie_genres$REVENUE), by=list(GENRE=movie_genres$GENRE), FUN=sum)
+names(movie_genres) <- c("GENRE", "REVENUE")
+vec <- movie_genres$REVENUE
+names(vec) <- movie_genres$GENRE
+barplot(vec, main="Ingresos por género", las=3, col=c("#69b3a2", "#69b300", "#69bfff"))
+
+ordered <- movie_genres[order(movie_genres$REVENUE, decreasing = TRUE),]
+```
+
+Como se puede ver en la gráfica, el género de película que mayores ingresos genera es Aventura seguido muy cercanamente de Acción con $`r max(movie_genres$REVENUE)` y $`r ordered$REVENUE[2]` respectivamente.
+
 ¿La cantidad de actores influye en los ingresos de las películas? ¿se han hecho películas con más actores en los últimos años?
 ¿Es posible que la cantidad de hombres y mujeres en el reparto influya en la popularidad y los ingresos de las películas?
 ¿Quiénes son los directores que hicieron las 20 películas mejor calificadas?

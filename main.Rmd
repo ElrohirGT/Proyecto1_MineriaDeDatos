@@ -56,10 +56,23 @@ top_10_expensive_movies
 Como se puede ver la película con mayores ingresos es: `r top_10_expensive_movies$Título[1]` con una cantidad de: `r top_10_expensive_movies$Ingresos[1]` dólares! Mientras que la última película dentro del top 10 es: `r top_10_expensive_movies$Título[10]` con un ingresos de $`r top_10_expensive_movies$Ingresos[10]`.
 
 
-¿Cuál es la película que más votos tuvo?
+### ¿Cuál es la película que más votos tuvo?
+```{r}
+ordered_voted_movies <- datos[order(datos$voteCount, decreasing = TRUE),]
+top_voted_movie <- head(ordered_voted_movies, n=1)
+```
+
+La película que más votos tuvo es: `r top_voted_movie$title[1]` con una cantidad de votos igual a: `r top_voted_movie$voteCount[1]`.
+
+### ¿Cuál es la peor película de acuerdo a los votos de todos los usuarios?
+```{r}
+ordered_voted_movies <- datos[order(datos$voteCount, decreasing = FALSE),]
+worst_rated_movie <- head(ordered_voted_movies, n=1)
+```
 
 
-¿Cuál es la peor película de acuerdo a los votos de todos los usuarios?
+La película que menos votos tuvo es: `r worst_rated_movie$title[1]` con una cantidad de votos igual a: `r worst_rated_movie$voteCount[1]`.
+
 ¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras
 ¿Cuál es el género principal de las 20 películas más recientes? ¿Cuál es el género principal que predomina en el conjunto de datos? Represéntelo usando un gráfico.
 ¿A qué género principal pertenecen las películas más largas?

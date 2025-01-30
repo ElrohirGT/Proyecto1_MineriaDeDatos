@@ -202,7 +202,7 @@ ordered <- movie_genres[order(-REVENUE)]
 Como se puede ver en la gráfica, el género de película que mayores ingresos genera es Drama seguido de Comedia con $`r max(movie_genres$REVENUE)` y $`r ordered$REVENUE[2]` respectivamente.
 
 ### ¿La cantidad de actores influye en los ingresos de las películas? ¿Se han hecho películas con más actores en los últimos años?
-```{r Pregunta 8}
+```{r Pregunta 8.1}
 library(data.table)
 
 # Convert to data.table for efficiency
@@ -227,10 +227,38 @@ barplot(setNames(movie_genres$REVENUE, movie_genres$ACTORAMOUNT),
 # Order by revenue
 # ordered <- movie_genres[order(-REVENUE)]
 
-
 ```
 
 Como se puede ver, una mayor cantidad de actores no implica una mayor cantidad de ingresos sin embargo se tiene un buen punto medio alrededor de 42 actores. 
+
+Con respecto a la cantidad de actores por años podemos reflejarlo en el siguiente gráfico:
+```{r Pregunta 8.2}
+library(data.table)
+
+# Convert to data.table for efficiency
+setDT(datos)
+datos[, genresAmount := as.numeric(actorsAmount)]
+
+# Order by release date in descending order
+movies_by_date <- datos[order(as.numeric(iconv(year, 'utf-8', 'ascii', sub='')))]
+
+# Split genres and unnest
+movie_genres <- movies_by_date[, .(ACTORAMOUNT = actorsAmount, YEAR = year)]
+
+# Aggregate revenue by genre
+movie_genres <- tail(movie_genres[, .(ACTORAMOUNT = sum(as.numeric(ACTORAMOUNT), na.rm = TRUE)), by = YEAR], n=30)
+
+# Create bar plot
+
+barplot(setNames(movie_genres$ACTORAMOUNT, movie_genres$YEAR), 
+        main = "Cantidad de actores en películas por año", 
+        las = 3, col = c("#69b3a2", "#69b300", "#69bfff"))
+
+# Order by revenue
+# ordered <- movie_genres[order(-REVENUE)]
+```
+
+Como se puede ver por la gráfica de barras la cantidad de actores por año sí ha ido creciendo año por año! El 2022 no está completo dentro del dataset y por eso tiene resultados tan bajos.
 
 ¿Es posible que la cantidad de hombres y mujeres en el reparto influya en la popularidad y los ingresos de las películas?
 ¿Quiénes son los directores que hicieron las 20 películas mejor calificadas?

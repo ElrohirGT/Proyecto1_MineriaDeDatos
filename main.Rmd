@@ -160,6 +160,7 @@ barplot(setNames(movie_genres$COUNT, movie_genres$GENRE),
 El género principal que predomina en todos los datos es Drama con una cantidad de películas del género igual a `r max(movie_genres$COUNT)`.
 
 **¿A qué género principal pertenecen las películas más largas?**
+
 ```{r Pregunta 6.3}
 movies_by_runtime <- datos[order(datos$runtime, decreasing = TRUE),]
 
@@ -185,6 +186,7 @@ barplot(vec, main="Géneros en las top 20 películas por duración", las=3, col=
 En la gráfica de arriba podemos ver los géneros de las top 20 películas más largas, como se puede ver el género de drama es el más usado y por una gran ventaja.
 
 ### ¿Las películas de qué genero principal obtuvieron mayores ganancias?
+
 ```{r Pregunta 7}
 library(data.table)
 
@@ -211,9 +213,10 @@ barplot(setNames(movie_genres$REVENUE, movie_genres$GENRE),
 ordered <- movie_genres[order(-REVENUE)]
 ```
 
-Como se puede ver en la gráfica, el género de película que mayores ingresos genera es Drama seguido de Comedia con $`r max(movie_genres$REVENUE)` y $`r ordered$REVENUE[2]` respectivamente.
+Como se puede ver en la gráfica, el género de película que mayores ingresos genera es Drama seguido de Comedia con $`r max(movie_genres$REVENUE)`y $`r ordered$REVENUE[2]` respectivamente.
 
 ### ¿La cantidad de actores influye en los ingresos de las películas? ¿Se han hecho películas con más actores en los últimos años?
+
 ```{r Pregunta 8.1}
 library(data.table)
 
@@ -241,9 +244,10 @@ barplot(setNames(movie_genres$REVENUE, movie_genres$ACTORAMOUNT),
 
 ```
 
-Como se puede ver, una mayor cantidad de actores no implica una mayor cantidad de ingresos sin embargo se tiene un buen punto medio alrededor de 42 actores. 
+Como se puede ver, una mayor cantidad de actores no implica una mayor cantidad de ingresos sin embargo se tiene un buen punto medio alrededor de 42 actores.
 
 Con respecto a la cantidad de actores por años podemos reflejarlo en el siguiente gráfico:
+
 ```{r Pregunta 8.2}
 library(data.table)
 
@@ -270,7 +274,8 @@ barplot(setNames(movie_genres$ACTORAMOUNT, movie_genres$YEAR),
 # ordered <- movie_genres[order(-REVENUE)]
 ```
 
-Como se puede ver por la gráfica de barras la cantidad de actores por año sí ha ido creciendo año por año! El 2022 no está completo dentro del dataset y por eso tiene resultados tan bajos.
+Como se puede ver por la gráfica de barras la cantidad de actores por año sí ha ido creciendo año por año!
+El 2022 no está completo dentro del dataset y por eso tiene resultados tan bajos.
 
 ### ¿Es posible que la cantidad de hombres y mujeres en el reparto influya en la popularidad y los ingresos de las películas?
 
@@ -295,14 +300,17 @@ plot(movie_cast$diferencia_cast, movie_castP$popularity,
      col="blue",pch=19)
 ```
 
-Se puede ver que la correlación entre la diferencia de géneros y las ganancias es `r cor(movie_cast$diferencia_cast, movie_cast$revenue, use = "complete.obs")`, y la correlación entre la diferencia de géneros y la popularidad es `r cor(movie_cast$diferencia_cast, movie_castP$popularity, use = "complete.obs")`. Esto indica que la cantidad de hombres y mujeres no influye en la ganancia ni popularidad de las peliculas.
+Se puede ver que la correlación entre la diferencia de géneros y las ganancias es .
+Esto indica que la cantidad de hombres y mujeres no influye en la ganancia ni popularidad de las peliculas.
 
 ### ¿Quiénes son los directores que hicieron las 20 películas mejor calificadas?
 
 ```{r Pregunta 10}
-datos
-
+directors <- head(datos[c('director','voteAvg')],20)
+directors[order(directors$voteAvg, decreasing = TRUE),]
 ```
+
+Estos son los 20 directores que han dirigido las peliculas mejores calificadas.
 
 ¿Cómo se correlacionan los presupuestos con los ingresos?
 ¿Los altos presupuestos significan altos ingresos?
@@ -313,6 +321,7 @@ cuantas películas, en promedio, se han lanzado por mes?
 ## Preguntas Extras
 
 ### ¿Las películas más largas generan mayores ingresos o reciben mejores calificaciones?
+
 ```{r Pregunta Extra 1.1}
 
 datos$runtime <- as.numeric(datos$runtime)
@@ -321,7 +330,8 @@ movies_by_runtime <- datos[order(datos$runtime, decreasing = TRUE),]
 plot(movies_by_runtime$runtime, movies_by_runtime$revenue, type = "l", xlab = "Duración", ylab = "Ingresos", main= "Duración VS Ingresos")
 ```
 
-Como se puede ver, las películas más largas no necesariamente implican una mayor cantidad de ingresos, de hecho varias de las películas que han generado grandes cantidades de ingresos son menores en duración a 200 minutos. Ahora con respecto al rating:
+Como se puede ver, las películas más largas no necesariamente implican una mayor cantidad de ingresos, de hecho varias de las películas que han generado grandes cantidades de ingresos son menores en duración a 200 minutos.
+Ahora con respecto al rating:
 
 ```{r Pregunta Extra 1.2}
 datos$runtime <- as.numeric(datos$runtime)
@@ -360,6 +370,7 @@ barplot(setNames(movie_countries$COUNT, movie_countries$COUNTRY),
 Como se puede ver, el país que produce la mayor cantidad de películas es los Estados Unidos de América y por mucho, ya que en total ha producido `r max(movie_countries$COUNT)` películas.
 
 ### ¿Las películas con más géneros combinados tienen mejores ingresos?
+
 ```{r Pregunta Extra 3}
 library(data.table)
 
@@ -385,4 +396,5 @@ barplot(setNames(movie_genres$REVENUE, movie_genres$GENRE),
 # ordered <- movie_genres[order(-REVENUE)]
 ```
 
-Como se puede ver, más géneros no implica mejores ganancias! De hecho parece que el sweet spot es 3 géneros.
+Como se puede ver, más géneros no implica mejores ganancias!
+De hecho parece que el sweet spot es 3 géneros.

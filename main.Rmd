@@ -121,24 +121,28 @@ barplot(vec, main="Géneros en las top 20 películas", las=3, col=c("#69b3a2", "
 
 Los dos géneros más populares entre las últimas 20 películas son Comedia y Drama. Mientras que en todos los datos:
 ```{r Pregunta 6.2}
-datos$releaseDate <- as.Date(datos$releaseDate)
-movies_by_date <- datos[order(datos$releaseDate, decreasing = TRUE),]
+library(data.table)
+library(tidyr)
 
-splitted_genres <- strsplit(movies_by_date$genres, split = "|", fixed = TRUE)
-movie_genres <- data.frame("", "")
-names(movie_genres)<- c("ID", "GENRE")
-for (idx in 1:dim(movies_by_date)[1]) {
-  for (genre in splitted_genres[[idx]]) {
-    temp <- c(movies_by_date$title[idx], genre)
-    names(temp) <- c("ID", "GENRE")
-    movie_genres<- rbind(movie_genres, temp)
-  }
-}
-movie_genres <- aggregate(movie_genres[,c("GENRE")], by=list(movie_genres$GENRE), FUN="length")
-names(movie_genres) <- c("GENRE", "COUNT")
-vec <- movie_genres$COUNT
-names(vec) <- movie_genres$GENRE
-barplot(vec, main="Géneros generales", las=3, col=c("#69b3a2", "#69b300", "#69bfff"))
+# Convert to data.table for efficiency
+setDT(datos)
+datos[, releaseDate := as.Date(releaseDate)]
+
+# Order by release date in descending order
+movies_by_date <- datos[order(-releaseDate)]
+
+# Split genres and unnest
+movies_by_date[, genres := strsplit(genres, split = "|", fixed = TRUE)]
+movie_genres <- movies_by_date[, .(ID = title, GENRE = unlist(genres))]
+
+# Count occurrences of each genre
+movie_genres <- movie_genres[, .(COUNT = .N), by = GENRE]
+
+# Create bar plot
+barplot(setNames(movie_genres$COUNT, movie_genres$GENRE), 
+        main = "Géneros generales", 
+        las = 3, col = c("#69b3a2", "#69b300", "#69bfff"))
+
 ```
 
 El género principal que predomina en todos los datos es Drama con una cantidad de películas del género igual a `r max(movie_genres$COUNT)`.

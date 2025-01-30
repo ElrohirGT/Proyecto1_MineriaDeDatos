@@ -234,7 +234,7 @@ plot(movies_by_runtime$runtime, movies_by_runtime$voteCount, type = "l", xlab = 
 Como se puede ver por la gráfica, una mayor duración de la película no implica una mayor cantidad de votos.
 
 
-### ¿Las películas con más géneros combinados tienen mejores ingresos?
+### ¿Qué países producen más películas?
 ```{r Pregunta Extra 2}
 library(data.table)
 

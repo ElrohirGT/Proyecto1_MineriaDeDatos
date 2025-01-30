@@ -214,7 +214,7 @@ Como se puede ver en la gráfica, el género de película que mayores ingresos g
 ## Preguntas Extras
 
 ### ¿Las películas más largas generan mayores ingresos o reciben mejores calificaciones?
-```{r Pregunta Extra 1}
+```{r Pregunta Extra 1.1}
 
 datos$runtime <- as.numeric(datos$runtime)
 movies_by_runtime <- datos[order(datos$runtime, decreasing = TRUE),]
@@ -222,8 +222,19 @@ movies_by_runtime <- datos[order(datos$runtime, decreasing = TRUE),]
 plot(movies_by_runtime$runtime, movies_by_runtime$revenue, type = "l", xlab = "Duración", ylab = "Ingresos", main= "Duración VS Ingresos")
 ```
 
+Como se puede ver, las películas más largas no necesariamente implican una mayor cantidad de ingresos, de hecho varias de las películas que han generado grandes cantidades de ingresos son menores en duración a 200 minutos. Ahora con respecto al rating:
 
-### ¿Qué países producen más películas?
+```{r Pregunta Extra 1.2}
+datos$runtime <- as.numeric(datos$runtime)
+movies_by_runtime <- datos[order(datos$runtime, decreasing = TRUE),]
+
+plot(movies_by_runtime$runtime, movies_by_runtime$voteCount, type = "l", xlab = "Duración", ylab = "Votos", main= "Duración VS Votos")
+```
+
+Como se puede ver por la gráfica, una mayor duración de la película no implica una mayor cantidad de votos.
+
+
+### ¿Las películas con más géneros combinados tienen mejores ingresos?
 ```{r Pregunta Extra 2}
 library(data.table)
 
@@ -249,4 +260,30 @@ barplot(setNames(movie_countries$COUNT, movie_countries$COUNTRY),
 
 Como se puede ver, el país que produce la mayor cantidad de películas es los Estados Unidos de América y por mucho, ya que en total ha producido `r max(movie_countries$COUNT)` películas.
 
-### ¿Los directores más populares suelen generar películas con mayor éxito de taquilla o mejor calificación?
+### ¿Las películas con más géneros combinados tienen mejores ingresos?
+```{r Pregunta Extra 3}
+library(data.table)
+
+# Convert to data.table for efficiency
+setDT(datos)
+datos[, genresAmount := as.numeric(genresAmount)]
+
+# Order by release date in descending order
+movies_by_date <- datos[order(-genresAmount)]
+
+# Split genres and unnest
+movie_genres <- movies_by_date[, .(GENREAMOUNT = genresAmount, REVENUE = revenue)]
+
+# Aggregate revenue by genre
+movie_genres <- movie_genres[, .(REVENUE = sum(as.numeric(REVENUE), na.rm = TRUE)), by = GENREAMOUNT]
+
+# Create bar plot
+barplot(setNames(movie_genres$REVENUE, movie_genres$GENRE), 
+        main = "Ingresos por cantidad de géneros", 
+        las = 3, col = c("#69b3a2", "#69b300", "#69bfff"))
+
+# Order by revenue
+# ordered <- movie_genres[order(-REVENUE)]
+```
+
+Como se puede ver, más géneros no implica mejores ganancias! De hecho parece que el sweet spot es 3 géneros.

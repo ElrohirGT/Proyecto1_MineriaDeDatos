@@ -247,6 +247,6 @@ barplot(setNames(movie_countries$COUNT, movie_countries$COUNTRY),
 
 ```
 
-Como se puede ver, el país que produce la mayor cantidad de películas es los Estados Unidos de América y por mucho, ya que en total ha producido `r max(movie_genres$COUNT)` películas.
+Como se puede ver, el país que produce la mayor cantidad de películas es los Estados Unidos de América y por mucho, ya que en total ha producido `r max(movie_countries$COUNT)` películas.
 
 ### ¿Los directores más populares suelen generar películas con mayor éxito de taquilla o mejor calificación?

@@ -204,3 +204,42 @@ Como se puede ver en la gráfica, el género de película que mayores ingresos g
 ¿Cómo se correlacionan las calificaciones con el éxito comercial?
 ¿La popularidad del elenco está directamente correlacionada con el éxito de taquilla?
 ¿Qué estrategias de marketing, como videos promocionales o páginas oficiales, generan mejores resultados?
+
+## Preguntas Extras
+
+### ¿Las películas más largas generan mayores ingresos o reciben mejores calificaciones?
+```{r Pregunta Extra 1}
+
+datos$runtime <- as.numeric(datos$runtime)
+movies_by_runtime <- datos[order(datos$runtime, decreasing = TRUE),]
+
+plot(movies_by_runtime$runtime, movies_by_runtime$revenue, type = "l", xlab = "Duración", ylab = "Ingresos", main= "Duración VS Ingresos")
+```
+
+
+### ¿Qué países producen más películas?
+```{r Pregunta Extra 2}
+splitted_countries <- strsplit(movies_by_date$productionCountry, split = "|", fixed = TRUE)
+movie_genres <- data.frame("", "")
+titles <- c("TITLE", "COUNTRY")
+names(movie_genres)<- titles
+for (idx in 1:dim(movies_by_date)[1]) {
+  for (country in splitted_countries[[idx]]) {
+    temp <- c(movies_by_date$title[idx], country)
+    names(temp) <- titles
+    movie_genres<- rbind(movie_genres, temp)
+  }
+}
+movie_genres <- aggregate(movie_genres[,c("COUNTRY")], by=list(movie_genres$COUNTRY), FUN="length")
+names(movie_genres) <- c("COUNTRY", "COUNT")
+movie_genres <- movie_genres[order(movie_genres$COUNT, decreasing = TRUE),]
+movie_genres <- head(movie_genres, n=3)
+
+vec <- movie_genres$COUNT
+names(vec) <- movie_genres$COUNTRY
+barplot(vec, main="Top 3 países productores de películas", las=1, col=c("#69b3a2", "#69b300", "#69bfff"))
+```
+
+Como se puede ver, el país que produce la mayor cantidad de películas es los Estados Unidos de América y por mucho, ya que en total ha producido `r max(movie_genres$COUNT)` películas.
+
+### ¿Los directores más populares suelen generar películas con mayor éxito de taquilla o mejor calificación?

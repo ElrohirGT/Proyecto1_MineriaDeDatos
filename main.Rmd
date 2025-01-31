@@ -529,3 +529,31 @@ barplot(setNames(movie_genres$REVENUE, movie_genres$GENRE),
 
 Como se puede ver, más géneros no implica mejores ganancias!
 De hecho parece que el sweet spot es 3 géneros.
+
+### ¿Cómo ha evolucionado el presupuesto el presupuesto promedio de las peliculas a lo largo de los años?
+
+```{r Pregunta Extra 4}
+datos$year <- format(datos$releaseDate, "%Y")
+datos <- datos[datos$budget > 0]
+budget_year <- datos %>% group_by(year) %>% summarise(presupuesto_promedio = mean(budget))
+
+ggplot(budget_year, aes(x = year, y = presupuesto_promedio, group = 1)) + 
+  geom_line(color = "blue", size = 1) +
+  scale_x_discrete(breaks = budget_year$year[seq(1, length(datos$year), by = 10)]) +
+  labs(title = "Presupuesto promedio por año", x = "Año", y = "Presupuesto promedio") +
+  theme_minimal()
+
+```
+
+Se puede ver un aumento en el presupuesto a lo largo de los años, lleagndo a su punto más alto a finales de los años 90. El presupuesto promedio tuvo un leve descenso en este siglo XXI pero ya en años más recientes el presupuesto promedio por año ha estado en ascenso.
+
+### ¿Las películas con más generos combinados tienen mejores ingresos o calificaciones?
+
+```{r Pregunta Extra 5}
+```
+
+### ¿Cuáles son las compañías productoras más exitosas en términos de ingresos generados?
+
+```{r Pregunta Extra 6}
+
+```

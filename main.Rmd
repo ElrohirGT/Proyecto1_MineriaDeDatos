@@ -280,7 +280,7 @@ El 2022 no está completo dentro del dataset y por eso tiene resultados tan bajo
 ### ¿Es posible que la cantidad de hombres y mujeres en el reparto influya en la popularidad y los ingresos de las películas?
 
 ```{r Pregunta 9}
-movie_cast <- head(datos[c('revenue','castMenAmount','castWomenAmount')],300)
+movie_cast <- head(datos[, c('revenue','castMenAmount','castWomenAmount')],300)
 movie_cast$diferencia_cast <- as.numeric(movie_cast$castMenAmount) - as.numeric(movie_cast$castWomenAmount)
 
 plot(movie_cast$diferencia_cast, movie_cast$revenue,
@@ -290,7 +290,7 @@ plot(movie_cast$diferencia_cast, movie_cast$revenue,
      col="blue",pch=19)
 relation_rev <- cor(movie_cast$diferencia_cast, movie_cast$revenue, use = "complete.obs")
 
-movie_castP <- head(datos[c('popularity','castMenAmount','castWomenAmount')],300)
+movie_castP <- head(datos[, c('popularity','castMenAmount','castWomenAmount')],300)
 movie_castP$diferencia_cast <- as.numeric(movie_cast$castMenAmount) - as.numeric(movie_cast$castWomenAmount)
 
 plot(movie_cast$diferencia_cast, movie_castP$popularity,
@@ -300,23 +300,60 @@ plot(movie_cast$diferencia_cast, movie_castP$popularity,
      col="blue",pch=19)
 ```
 
-Se puede ver que la correlación entre la diferencia de géneros y las ganancias es .
-Esto indica que la cantidad de hombres y mujeres no influye en la ganancia ni popularidad de las peliculas.
+Se puede ver que la correlación entre la diferencia de géneros y las ganancias es `r cor(movie_cast$diferencia_cast, movie_cast$revenue, use = "complete.obs")`, y la correlación entre la diferencia de géneros y la popularidad es `r cor(movie_cast$diferencia_cast, movie_castP$popularity, use = "complete.obs")`. Esto indica que la cantidad de hombres y mujeres no influye en la ganancia ni popularidad de las peliculas.
 
 ### ¿Quiénes son los directores que hicieron las 20 películas mejor calificadas?
 
 ```{r Pregunta 10}
-directors <- head(datos[c('director','voteAvg')],20)
-directors[order(directors$voteAvg, decreasing = TRUE),]
+directors <- head(datos[, c('director','voteAvg')],20)
+o_directors <- directors[order(directors$voteAvg, decreasing = TRUE),]
+o_directors[, c('director')]
 ```
 
 Estos son los 20 directores que han dirigido las peliculas mejores calificadas.
 
-¿Cómo se correlacionan los presupuestos con los ingresos?
-¿Los altos presupuestos significan altos ingresos?
-Haga los gráficos que necesite, histograma, diagrama de dispersión ¿Se asocian ciertos meses de lanzamiento con mejores ingresos?
-¿En qué meses se han visto los lanzamientos con mejores ingresos?¿
-cuantas películas, en promedio, se han lanzado por mes?
+### ¿Cómo se correlacionan los presupuestos con los ingresos? ¿Los altos presupuestos significan altos ingresos? Haga los gráficos que necesite, histograma, diagrama de dispersión
+
+```{r Pregunta 11}
+incomes <- datos[, c('budget','revenue')]
+plot(incomes$budget, incomes$revenue,
+     main = "Relación entre Presupuesto y Ganancia",
+     xlab="Presupuesto",
+     ylab="Ganancia",
+     col="blue",pch=19)
+```
+
+Se puede encontrar una relación entre el presupuesto y la ganancia. Es apreciable como a mayor presupuesto hay una mayor ganancia en las peliculas. Para corroborar este dato podemos calcular la variable de correlación que es `r cor(incomes$budget, incomes$revenue, use = "complete.obs")`, al ser cercanan a 1 nos inidica una correlación positiva entre el presupuesto y las ganancias. 
+
+### ¿Se asocian ciertos meses de lanzamiento con mejores ingresos?
+
+```{r Pregunta 12}
+
+```
+
+### ¿En qué meses se han visto los lanzamientos con mejores ingresos?¿cuantas películas, en promedio, se han lanzado por mes?
+
+```{r Pregunta 13}
+
+```
+
+### ¿Cómo se correlacionan las calificaciones con el éxito comercial?
+
+```{r Pregunta 14}
+
+```
+
+### ¿Qué estrategias de marketing, como videos promocionales o páginas oficiales, generan mejores resultados?
+
+```{r Pregunta 15}
+
+```
+
+### ¿La popularidad del elenco está directamente correlacionada con el éxito de taquilla?
+
+```{r Pregunta 16}
+
+```
 
 ## Preguntas Extras
 

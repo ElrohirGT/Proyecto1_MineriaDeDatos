@@ -401,13 +401,29 @@ movie_count[, c('mes','promedio_peliculas')]
 ### ¿Cómo se correlacionan las calificaciones con el éxito comercial?
 
 ```{r Pregunta 14}
-
+success <- datos[datos$revenue > budget * 3]
+cor(success$voteAvg, success$revenue, use = "complete.obs")
 ```
+Según el coeficiente de correlación entre las calificaciones y el éxito comercial de una pelicula, nos indica que no existe una clara relación entre estas variables y que pueden haber peliculas que no sean exitosos comerciales pero tengan buena calificación como exitos comerciales que tengan mala calificación, entre otros posibles casos. 
 
 ### ¿Qué estrategias de marketing, como videos promocionales o páginas oficiales, generan mejores resultados?
 
 ```{r Pregunta 15}
+library(ggplot2)
+library(dplyr)
 
+tabla1 <- datos[is.na(datos$homePage) & datos$video == TRUE, ]
+tabla2 <- datos[!is.na(datos$homePage) & datos$video == FALSE, ]
+tabla3 <- datos[!is.na(datos$homePage) & datos$video == TRUE, ]
+
+promedio1 <- mean(tabla1$revenue, na.rm = TRUE)
+promedio2 <- mean(tabla2$revenue, na.rm = TRUE)
+promedio3 <- mean(tabla3$revenue, na.rm = TRUE)
+
+df_promedios <- data.frame(
+  Categoria = c("Sin homePage y con video", "Con homePage y sin video", "Con homePage y con video"),
+  Promedio_Ganancia = c(promedio1, promedio2, promedio3)
+)
 ```
 
 ### ¿La popularidad del elenco está directamente correlacionada con el éxito de taquilla?

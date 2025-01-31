@@ -424,13 +424,30 @@ df_promedios <- data.frame(
   Categoria = c("Sin homePage y con video", "Con homePage y sin video", "Con homePage y con video"),
   Promedio_Ganancia = c(promedio1, promedio2, promedio3)
 )
+df_promedios
 ```
+
+Se ve que la mejor estrategia de marketing son las páginas oficiles sin ofrecer video.
 
 ### ¿La popularidad del elenco está directamente correlacionada con el éxito de taquilla?
 
 ```{r Pregunta 16}
+library(dplyr)
+library(tidyr)
 
+success <- datos[datos$revenue > budget * 3]
+success <- success %>% 
+  mutate(popularidad_media = sapply(strsplit(actorsPopularity, "\\|"),
+                                    function(x) mean(as.numeric(x), na.rm = TRUE)))
+popularity <- head(success[, c('popularidad_media','revenue')],300)
+plot(popularity$popularidad_media, popularity$revenue,
+     main = "Relación entre Popularidad de actores y Ganancia",
+     xlab="Popularidad",
+     ylab="Ganancia",
+     col="blue",pch=19)
 ```
+
+Se puede ver que no existe una correlación clara entre la popularidad de los actores de una cinta con su ganacia, esto es incluso más perceptible con el coeficiente de correlación que es cercano a 0: `r cor(popularity$popularidad_media, popularity$revenue, use = "complete.obs")`.
 
 ## Preguntas Extras
 

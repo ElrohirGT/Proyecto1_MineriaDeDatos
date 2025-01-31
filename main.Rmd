@@ -300,7 +300,8 @@ plot(movie_cast$diferencia_cast, movie_castP$popularity,
      col="blue",pch=19)
 ```
 
-Se puede ver que la correlación entre la diferencia de géneros y las ganancias es `r cor(movie_cast$diferencia_cast, movie_cast$revenue, use = "complete.obs")`, y la correlación entre la diferencia de géneros y la popularidad es `r cor(movie_cast$diferencia_cast, movie_castP$popularity, use = "complete.obs")`. Esto indica que la cantidad de hombres y mujeres no influye en la ganancia ni popularidad de las peliculas.
+Se puede ver que la correlación entre la diferencia de géneros y las ganancias es `r cor(movie_cast$diferencia_cast, movie_cast$revenue, use = "complete.obs")`, y la correlación entre la diferencia de géneros y la popularidad es `r cor(movie_cast$diferencia_cast, movie_castP$popularity, use = "complete.obs")`.
+Esto indica que la cantidad de hombres y mujeres no influye en la ganancia ni popularidad de las peliculas.
 
 ### ¿Quiénes son los directores que hicieron las 20 películas mejor calificadas?
 
@@ -323,13 +324,43 @@ plot(incomes$budget, incomes$revenue,
      col="blue",pch=19)
 ```
 
-Se puede encontrar una relación entre el presupuesto y la ganancia. Es apreciable como a mayor presupuesto hay una mayor ganancia en las peliculas. Para corroborar este dato podemos calcular la variable de correlación que es `r cor(incomes$budget, incomes$revenue, use = "complete.obs")`, al ser cercanan a 1 nos inidica una correlación positiva entre el presupuesto y las ganancias. 
+Se puede encontrar una relación entre el presupuesto y la ganancia.
+Es apreciable como a mayor presupuesto hay una mayor ganancia en las peliculas.
+Para corroborar este dato podemos calcular la variable de correlación que es `r cor(incomes$budget, incomes$revenue, use = "complete.obs")`, al ser cercanan a 1 nos inidica una correlación positiva entre el presupuesto y las ganancias.
 
 ### ¿Se asocian ciertos meses de lanzamiento con mejores ingresos?
 
 ```{r Pregunta 12}
+library(dplyr)
+library(ggplot2)
+
+# Asegurar que releaseDate sea de tipo fecha
+datos$releaseDate <- as.Date(datos$releaseDate)
+
+# Seleccionar columnas y crear la columna 'mes'
+months <- datos %>%
+  select(revenue, releaseDate) %>%
+  mutate(
+    mes = format(releaseDate, "%m"),  # Extraer el mes
+    ganancia = revenue  # Renombrar la columna
+  ) %>%
+  select(ganancia, mes)  # Reordenar columnas
+
+table <- months %>%
+  group_by(mes) %>%
+  summarise(ganancia_promedio = mean(ganancia, na.rm = TRUE))
+
+table$mes <- as.factor(table$mes)
+
+ggplot(table, aes(x=mes, y=ganancia_promedio, fill = mes)) + geom_bar(stat="identity") +
+  scale_fill_manual(values = c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD", 
+             "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF",
+             "#AEC7E8", "#FFBB78")) +
+  theme(legend.position = "none")
 
 ```
+
+Se puede ver que los mejores meses para generar ingresos es en Junio y Mayo.
 
 ### ¿En qué meses se han visto los lanzamientos con mejores ingresos?¿cuantas películas, en promedio, se han lanzado por mes?
 

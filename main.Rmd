@@ -547,10 +547,19 @@ ggplot(budget_year, aes(x = year, y = presupuesto_promedio, group = 1)) +
 
 Se puede ver un aumento en el presupuesto a lo largo de los años, lleagndo a su punto más alto a finales de los años 90. El presupuesto promedio tuvo un leve descenso en este siglo XXI pero ya en años más recientes el presupuesto promedio por año ha estado en ascenso.
 
-### ¿Las películas con más generos combinados tienen mejores ingresos o calificaciones?
+### ¿En qué años se han producido las películas con los mayores presupuestos?
 
 ```{r Pregunta Extra 5}
+datos$year <- format(datos$releaseDate, "%Y")
+datos <- datos[order(datos$budget, decreasing = TRUE),]
+budget_year <- head(datos[, c('year','budget', 'title')],10)
+colnames(budget_year)[1] = "Año"
+colnames(budget_year)[2] = "Presupuesto"
+colnames(budget_year)[3] = "Pelicula"
+budget_year
 ```
+
+Estos serían los años en donde se han producido las peliculas con mayores presupuesto, adjunto a esta información se encuentra el nombre respectivo de la pelicula.
 
 ### ¿Cuáles son las compañías productoras más exitosas en términos de ingresos generados?
 

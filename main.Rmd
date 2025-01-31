@@ -564,5 +564,26 @@ Estos serían los años en donde se han producido las peliculas con mayores pres
 ### ¿Cuáles son las compañías productoras más exitosas en términos de ingresos generados?
 
 ```{r Pregunta Extra 6}
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+datos <- datos %>%
+  mutate(productionCompany = str_squish(productionCompany)) %>%  # Elimina espacios extra dentro del string
+  separate_rows(productionCompany, sep = "\\|") %>%  # Separa en filas individuales
+  mutate(productionCompany = str_trim(productionCompany))  # Elimina espacios extra en cada nombre
+
+companies <- datos %>% group_by(productionCompany) %>% summarise(ingresos = sum(revenue, na.rm = TRUE), total_peliculas = n())
+companies <- companies[, c('productionCompany', 'ingresos')]
+companies <- head(companies[order(companies$ingresos, decreasing = TRUE),],10)
+colnames(companies)[1] = "Compañia productora"
+companies
+ggplot(companies, aes(x=`Compañia productora`, y=ingresos, fill = `Compañia productora`)) + geom_bar(stat="identity") +
+  scale_fill_manual(values = c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD", 
+             "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF")) +
+  theme(axis.text.x = element_blank(),  # Oculta etiquetas del eje X
+        axis.ticks.x = element_blank())
 
 ```
+
+Estas son las Compañias productoras más exitosas en terminos de los ingresos totales generados. Es apreciable estudios como "Warner Bros. Pictures" tenga el mayor número de ingresos debido a que es uno de las compañias más longevas y que sigue vigente a día de hoy.

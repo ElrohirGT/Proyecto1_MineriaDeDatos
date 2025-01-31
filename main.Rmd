@@ -364,10 +364,40 @@ Se puede ver que los mejores meses para generar ingresos es en Junio y Mayo.
 
 ### ¿En qué meses se han visto los lanzamientos con mejores ingresos?¿cuantas películas, en promedio, se han lanzado por mes?
 
-```{r Pregunta 13}
+```{r Pregunta 13.1}
+library(dplyr)
 
+datos$releaseDate <- as.Date(datos$releaseDate)
+
+datos$mes <- format(datos$releaseDate, "%m")
+
+data <- datos[, c('revenue', 'mes')]
+o_revenue <- head(data[order(data$revenue, decreasing = TRUE)],10)
+o_revenueM <- o_revenue %>% group_by(mes) %>% summarize(total_revenue = sum(revenue))
+o_revenueM$mes <- month.name[as.numeric(o_revenueM$mes)]
 ```
 
+Los meses donde se han visto los mejores lanzamientos han sido: `r o_revenueM$mes`. 
+
+A continuación se muestra el promedio de peliculas por mes:
+
+```{r Pregunta 13.2}
+library(dplyr)
+
+datos$releaseDate <- as.Date(datos$releaseDate)
+
+datos$mes <- format(datos$releaseDate, "%m")
+datos$year <- format(datos$releaseDate, "%Y")
+
+year_count <- datos[, c('year')] %>% group_by(year) %>% summarise(count = n())
+total_years <- nrow(year_count)
+
+data <- datos[, c('title', 'mes')]
+movie_count <- data %>% group_by(mes) %>% summarise(count = n())
+movie_count$promedio_peliculas <- movie_count$count / as.numeric(total_years)
+
+movie_count[, c('mes','promedio_peliculas')]
+```
 ### ¿Cómo se correlacionan las calificaciones con el éxito comercial?
 
 ```{r Pregunta 14}

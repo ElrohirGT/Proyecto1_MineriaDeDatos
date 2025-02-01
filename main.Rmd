@@ -27,7 +27,454 @@ summary(datos)
 
 ## Tipos de cada variable
 
-(Prince) (Hay que listar también si siguen una distribución normal y la tabla de frecuencia para las cualitativas).
+1. **Id**: Cuantitativa discreta 
+
+```{r normal distribution1}
+library(ggplot2)
+
+datos$id <- suppressWarnings(as.numeric(as.character(datos$id)))
+datos <- datos[!is.na(datos$id), ]
+
+if (nrow(datos) > 0) {
+  
+  ggplot(datos, aes(x = id)) +
+    geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+    stat_function(fun = dnorm, args = list(mean = mean(datos$id, na.rm = TRUE),
+                                           sd = sd(datos$id, na.rm = TRUE)),
+                  color = "red", size = 1) +
+    ggtitle("Histograma para Id")
+
+  qqnorm(datos$id, main = "QQ Plot de Id")
+  qqline(datos$id, col = "red", lwd = 2)
+  
+} else {
+  print("No hay datos válidos en actorsPopularity después de la conversión.")
+}
+```
+
+Para la distribución de esta variable se puede ver que su distribución no se asemeja en nada a una distribución normal, podemos ver en el histograma un sesgo hacia la derecha y en el QQ Plot los datos se alejan de la directriz.
+
+2. **popularity**: Cuantitativa continua 
+
+```{r normal distribution2}
+ggplot(datos, aes(x = popularity)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(datos$popularity, na.rm = TRUE),
+                                         se = sd(datos$popularity, na.rm = TRUE)),
+                color = "red", size = 1) +
+  ggtitle("Histograma para popularity")
+
+qqnorm(datos$popularity, main = "QQ Plot de popularity")
+qqline(datos$popularity, col = "red", lwd = 2)
+```
+
+Para esta variable, su distribución no termina de asemejarse a una distribución normal, ni en el histograma ni en el QQ Plot.
+
+3. **budget**: Cuantitativa discreta (no se incluyen centavos)
+
+```{r normal distribution3}
+ggplot(datos, aes(x = budget)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(datos$budget, na.rm = TRUE),
+                                         se = sd(datos$budget, na.rm = TRUE)),
+                color = "red", size = 1) +
+  ggtitle("Histograma para budget")
+
+qqnorm(datos$budget, main = "QQ Plot de budget")
+qqline(datos$budget, col = "red", lwd = 2)
+```
+
+Para esta variable se nota a simple vista que los datos no pertenecen a una distribución normal, los datos (ni en el histograma como en el QQ Plot) se ajustan a una distribución normal.
+
+4. **revenue**: Cuantitativa discreta (no se incluyen centavos)
+
+```{r normal distribution 4}
+ggplot(datos, aes(x = revenue)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(datos$revenue, na.rm = TRUE),
+                                         se = sd(datos$revenue, na.rm = TRUE)),
+                color = "red", size = 1) +
+  ggtitle("Histograma para revenue")
+
+qqnorm(datos$revenue, main = "QQ Plot de revenue")
+qqline(datos$revenue, col = "red", lwd = 2)
+```
+
+La distribución para esta variable demuestra que sus datos estan en la directriz del QQ Plot, pero viendo la distribución en el histograma se puede apreciar que su distribución es uniforme.
+
+5. **original_title**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra la cantidad total de apariciones por cada una de los titulos originales de las peliculas.
+
+```{r frecuency table1}
+library(dplyr)
+
+frecuency <- datos %>% count(originalTitle) %>% arrange(desc(n))
+colnames(frecuency)[1] = "Titulo original"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+6. **originalLanguage**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra la cantidad total de apariciones por cada una de los Idiomas originales de las peliculas.
+
+```{r frecuency table2}
+frecuency <- datos %>% count(originalLanguage) %>% arrange(desc(n))
+colnames(frecuency)[1] = "Idioma original"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+7. **title**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra la cantidad total de apariciones por cada una de los titulos de las peliculas.
+
+```{r frecuency table3}
+frecuency <- datos %>% count(title) %>% arrange(desc(n))
+colnames(frecuency)[1] = "Titutlo"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+8. **homePage**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra la cantidad total de apariciones por cada una de las home pages de las peliculas.
+
+```{r frecuency table4}
+frecuency <- datos %>% count(homePage) %>% arrange(desc(n)) %>% filter(!is.na(homePage))
+colnames(frecuency)[1] = "Home Page"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+9. **video**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra la cantidad total de peliculas que cuentan o no con un video.
+
+```{r frecuency table5}
+frecuency <- datos %>% count(video) %>% arrange(desc(n))
+colnames(frecuency)[1] = "Video"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+10. **director**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra la cantidad total de veces que un director a dirigido una pelicula.
+
+```{r frecuency table6}
+library(tidyr)
+frecuency <- datos %>%
+  separate_rows(director, sep = "\\|") %>%  
+  count(director) %>%                       
+  arrange(desc(n))                          
+
+colnames(frecuency)[1] = "Director"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+11. **runtime**: Cuantitativa discreta
+
+```{r normal distribution6}
+ggplot(datos, aes(x = runtime)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(datos$runtime, na.rm = TRUE),
+                                         se = sd(datos$runtime, na.rm = TRUE)),
+                color = "red", size = 1) +
+  ggtitle("Histograma para runtime")
+
+qqnorm(datos$runtime, main = "QQ Plot de runtime")
+qqline(datos$runtime, col = "red", lwd = 2)
+```
+
+Para esta variable se nota a simple vista que los datos no pertenecen a una distribución normal, los datos (ni en el histograma como en el QQ Plot) se ajustan a una distribución normal.
+
+12. **genres**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra los posibles géneros que puede tener una pelicula.
+
+```{r frecuency table7}
+frecuency <- datos %>%
+  separate_rows(genres, sep = "\\|") %>%  
+  count(genres) %>%                       
+  arrange(desc(n))  
+
+colnames(frecuency)[1] = "Género"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+13. **genresAmount**: Cuantitativa discreta
+
+```{r normal distribution7}
+ggplot(datos, aes(x = genresAmount)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(datos$genresAmount, na.rm = TRUE),
+                                         se = sd(datos$genresAmount, na.rm = TRUE)),
+                color = "red", size = 1) +
+  ggtitle("Histograma para genresAmount")
+
+qqnorm(datos$runtime, main = "QQ Plot de genresAmount")
+qqline(datos$runtime, col = "red", lwd = 2)
+```
+
+Para esta variable se nota a simple vista que los datos no pertenecen a una distribución normal, los datos (ni en el histograma como en el QQ Plot) se ajustan a una distribución normal.
+
+14. **productionCompany**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra la cantidad total de peliculas que ha hecho cada productora.
+
+```{r frecuency table8}
+frecuency <- datos %>% count(productionCompany) %>% arrange(desc(n))
+colnames(frecuency)[1] = "Compañía productora"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+15. **productionCoAmount**: Cuantitativa discreta
+
+```{r normal distribution8}
+ggplot(datos, aes(x = productionCoAmount)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(datos$productionCoAmount, na.rm = TRUE),
+                                         se = sd(datos$productionCoAmount, na.rm = TRUE)),
+                color = "red", size = 1) +
+  ggtitle("Histograma para productionCoAmount")
+
+qqnorm(datos$productionCoAmount, main = "QQ Plot de productionCoAmount")
+qqline(datos$productionCoAmount, col = "red", lwd = 2)
+```
+
+La distribución para esta variable demuestra que sus datos estan en la directriz del QQ Plot, pero viendo la distribución en el histograma se puede apreciar que su distribución es uniforme.
+
+16. **productionCompanyCountry**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra el número de productoras que se ubican en determinados países.
+
+```{r frecuency table9}
+frecuency <- datos %>%
+  separate_rows(productionCompanyCountry, sep = "\\|") %>%  
+  count(productionCompanyCountry) %>%                       
+  arrange(desc(n))  %>% 
+  filter(productionCompanyCountry != "" & !is.na(productionCompanyCountry))
+
+colnames(frecuency)[1] = "País de Compañía productora"
+colnames(frecuency)[2] = "Cantidad"
+
+frecuency
+```
+
+17. **productionCountry**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra la cantidad de veces que se ha producido una pelicula en ese país.
+
+```{r frecuency table9+1}
+frecuency <- datos %>%
+  separate_rows(productionCountry, sep = "\\|") %>%  
+  count(productionCountry) %>%                       
+  arrange(desc(n)) %>% 
+  filter(productionCountry != "")
+colnames(frecuency)[1] = "País de producción"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+18. **productionCountriesAmount**: Cuantitativa discreta
+
+```{r normal distribution9}
+datos$productionCountriesAmount <- suppressWarnings(as.numeric(as.character(datos$productionCountriesAmount)))
+datos <- datos[!is.na(datos$productionCountriesAmount), ]
+
+if (nrow(datos) > 0) {
+  
+  ggplot(datos, aes(x = productionCountriesAmount)) +
+    geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+    stat_function(fun = dnorm, args = list(mean = mean(datos$productionCountriesAmount, na.rm = TRUE),
+                                           sd = sd(datos$productionCountriesAmount, na.rm = TRUE)),
+                  color = "red", size = 1) +
+    ggtitle("Histograma para productionCountriesAmount")
+
+  qqnorm(datos$productionCountriesAmount, main = "QQ Plot de productionCountriesAmount")
+  qqline(datos$productionCountriesAmount, col = "red", lwd = 2)
+  
+} else {
+  print("No hay datos válidos en actorsPopularity después de la conversión.")
+}
+```
+
+La distribución para esta variable demuestra que sus datos estan en la directriz del QQ Plot, pero viendo la distribución en el histograma se puede apreciar que su distribución es uniforme.
+
+19. **releaseDate**: Cualitativa ordinal
+
+La siguiente tabla de frecuencia muestra las fechas en las que se han lanzado las diferentes peliculas.
+
+```{r frecuency table10}
+frecuency <- datos %>%
+  count(releaseDate) %>%                       
+  arrange(desc(n))  
+
+colnames(frecuency)[1] = "Fecha de lanzamiento"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+20. **voteCount**: Cuantitativa discreta
+
+```{r normal distribution10}
+ggplot(datos, aes(x = voteCount)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(datos$voteCount, na.rm = TRUE),
+                                         se = sd(datos$voteCount, na.rm = TRUE)),
+                color = "red", size = 1) +
+  ggtitle("Histograma para voteCount")
+
+qqnorm(datos$voteCount, main = "QQ Plot de voteCount")
+qqline(datos$voteCount, col = "red", lwd = 2)
+```
+
+Para esta variable se nota a simple vista que los datos no pertenecen a una distribución normal, los datos (ni en el histograma como en el QQ Plot) se ajustan a una distribución normal.
+
+21. **voteAvg**: Cuantitativa continua
+
+```{r normal distribution11}
+ggplot(datos, aes(x = voteAvg)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(datos$voteAvg, na.rm = TRUE),
+                                         se = sd(datos$voteAvg, na.rm = TRUE)),
+                color = "red", size = 1) +
+  ggtitle("Histograma para voteAvg")
+
+qqnorm(datos$voteAvg, main = "QQ Plot de voteAvg")
+qqline(datos$voteAvg, col = "red", lwd = 2)
+```
+
+Para esta variable se nota a simple vista que los datos no pertenecen a una distribución normal, los datos (ni en el histograma como en el QQ Plot) se ajustan a una distribución normal.
+
+22. **actors**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra el nombre de los actores, indicando cuantas veces ha actuado.
+
+```{r frecuency table11}
+frecuency <- datos %>%
+  separate_rows(actors, sep = "\\|") %>%  
+  count(actors) %>%                       
+  arrange(desc(n)) %>%
+  filter(actors != FALSE)
+
+colnames(frecuency)[1] = "Actor"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+23. **actorsPopularity**: Cuantitativa continua
+
+```{r normal distribution12}
+datos$actorsPopularity <- suppressWarnings(as.numeric(as.character(datos$actorsPopularity)))
+datos <- datos[!is.na(datos$actorsPopularity), ]
+
+if (nrow(datos) > 0) {
+  
+  ggplot(datos, aes(x = actorsPopularity)) +
+    geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+    stat_function(fun = dnorm, args = list(mean = mean(datos$actorsPopularity, na.rm = TRUE),
+                                           sd = sd(datos$actorsPopularity, na.rm = TRUE)),
+                  color = "red", size = 1) +
+    ggtitle("Histograma para actorsPopularity")
+
+  qqnorm(datos$actorsPopularity, main = "QQ Plot de actorsPopularity")
+  qqline(datos$actorsPopularity, col = "red", lwd = 2)
+  
+} else {
+  print("No hay datos válidos en actorsPopularity después de la conversión.")
+}
+```
+
+Para esta variable se nota a simple vista que los datos no pertenecen a una distribución normal, los datos (ni en el histograma como en el QQ Plot) se ajustan a una distribución normal.
+
+24. **actorsCharacter**: Cualitativa nominal
+
+La siguiente tabla de frecuencia muestra la cantidad de apariciones que ha tenido un personaje indicando si fue solo por voz o si el personaje no fue acreditado.
+
+```{r frecuency table12}
+frecuency <- datos %>%
+  separate_rows(actorsCharacter, sep = "\\|") %>%  
+  count(actorsCharacter) %>%                       
+  arrange(desc(n))  %>%
+  filter(actorsCharacter != "" & actorsCharacter != "(voice)" & actorsCharacter != "(uncredited)")
+
+colnames(frecuency)[1] = "Personaje"
+colnames(frecuency)[2] = "Cantidad"
+frecuency
+```
+
+25. **actorsAmount**: Cuantitativa discreta
+
+```{r normal distribution13}
+ggplot(datos, aes(x = actorsAmount)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(datos$actorsAmount, na.rm = TRUE),
+                                         se = sd(datos$actorsAmount, na.rm = TRUE)),
+                color = "red", size = 1) +
+  ggtitle("Histograma para actorsAmount")
+
+qqnorm(datos$actorsAmount, main = "QQ Plot de actorsAmount")
+qqline(datos$actorsAmount, col = "red", lwd = 2)
+```
+
+Para esta variable se nota a simple vista que los datos no pertenecen a una distribución normal, los datos (ni en el histograma como en el QQ Plot) se ajustan a una distribución normal.
+
+26. **CastWomenAmount**: Cuantitativa discreta
+
+```{r normal distribution14}
+datos$castWomenAmount <- suppressWarnings(as.numeric(as.character(datos$castWomenAmount)))
+datos <- datos[!is.na(datos$castWomenAmount), ]
+
+if (nrow(datos) > 0) {
+  
+  ggplot(datos, aes(x = castWomenAmount)) +
+    geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+    stat_function(fun = dnorm, args = list(mean = mean(datos$castWomenAmount, na.rm = TRUE),
+                                           sd = sd(datos$castWomenAmount, na.rm = TRUE)),
+                  color = "red", size = 1) +
+    ggtitle("Histograma para castWomanAmount")
+
+  qqnorm(datos$castWomenAmount, main = "QQ Plot de castWomenAmount")
+  qqline(datos$castWomenAmount, col = "red", lwd = 2)
+  
+} else {
+  print("No hay datos válidos en castMenAmount después de la conversión.")
+}
+```
+
+Para esta variable se nota a simple vista que los datos no pertenecen a una distribución normal, los datos (ni en el histograma como en el QQ Plot) se ajustan a una distribución normal.
+
+27. **CastMenAmount**: Cuantitativa discreta
+
+```{r normal distribution15}
+datos$castMenAmount <- suppressWarnings(as.numeric(as.character(datos$castMenAmount)))
+datos <- datos[!is.na(datos$castMenAmount), ]
+
+if (nrow(datos) > 0) {
+  
+  ggplot(datos, aes(x = castMenAmount)) +
+    geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
+    stat_function(fun = dnorm, args = list(mean = mean(datos$castMenAmount, na.rm = TRUE),
+                                           sd = sd(datos$castMenAmount, na.rm = TRUE)),
+                  color = "red", size = 1) +
+    ggtitle("Histograma para castMenAmount")
+
+  qqnorm(datos$castMenAmount, main = "QQ Plot de castMenAmount")
+  qqline(datos$castMenAmount, col = "red", lwd = 2)
+  
+} else {
+  print("No hay datos válidos en castMenAmount después de la conversión.")
+}
+
+```
+
+Se puede ver por el QQ plot que los datos se asemejan un poco a una distribución normal pero se puede observar por la cola derecha de los datos, que no se ajustan a la directriz de la gráfica y esa curva que se crea esta bastante pronunciada. Esto demuestra que la variable castMenAmount no se ajusta a una distribución normal.
 
 ## Preguntas
 
@@ -437,7 +884,7 @@ library(tidyr)
 
 success <- datos[datos$revenue > budget * 3]
 success <- success %>% 
-  mutate(popularidad_media = sapply(strsplit(actorsPopularity, "\\|"),
+  mutate(popularidad_media = sapply(strsplit(as.character(actorsPopularity), "\\|"),
                                     function(x) mean(as.numeric(x), na.rm = TRUE)))
 popularity <- head(success[, c('popularidad_media','revenue')],300)
 plot(popularity$popularidad_media, popularity$revenue,

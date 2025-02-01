@@ -16,6 +16,8 @@ editor_options:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+[Repositorio](https://github.com/ElrohirGT/Proyecto1_MineriaDeDatos.git)
+
 ## Resumen del conjunto de Datos
 
 Los datos tienen la siguiente forma:
@@ -27,25 +29,25 @@ summary(datos)
 
 ## Tipos de cada variable
 
-1. **Id**: Cuantitativa discreta 
+1.  **Id**: Cuantitativa discreta
 
 ```{r normal distribution1}
 library(ggplot2)
 
 datos$id <- suppressWarnings(as.numeric(as.character(datos$id)))
-datos <- datos[!is.na(datos$id), ]
+datosX <- datos[!is.na(datos$id), ]
 
 if (nrow(datos) > 0) {
   
-  ggplot(datos, aes(x = id)) +
+  ggplot(datosX, aes(x = id)) +
     geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
-    stat_function(fun = dnorm, args = list(mean = mean(datos$id, na.rm = TRUE),
+    stat_function(fun = dnorm, args = list(mean = mean(datosX$id, na.rm = TRUE),
                                            sd = sd(datos$id, na.rm = TRUE)),
                   color = "red", size = 1) +
     ggtitle("Histograma para Id")
 
-  qqnorm(datos$id, main = "QQ Plot de Id")
-  qqline(datos$id, col = "red", lwd = 2)
+  qqnorm(datosX$id, main = "QQ Plot de Id")
+  qqline(datosX$id, col = "red", lwd = 2)
   
 } else {
   print("No hay datos válidos en actorsPopularity después de la conversión.")
@@ -54,7 +56,7 @@ if (nrow(datos) > 0) {
 
 Para la distribución de esta variable se puede ver que su distribución no se asemeja en nada a una distribución normal, podemos ver en el histograma un sesgo hacia la derecha y en el QQ Plot los datos se alejan de la directriz.
 
-2. **popularity**: Cuantitativa continua 
+2.  **popularity**: Cuantitativa continua
 
 ```{r normal distribution2}
 ggplot(datos, aes(x = popularity)) +
@@ -70,7 +72,7 @@ qqline(datos$popularity, col = "red", lwd = 2)
 
 Para esta variable, su distribución no termina de asemejarse a una distribución normal, ni en el histograma ni en el QQ Plot.
 
-3. **budget**: Cuantitativa discreta (no se incluyen centavos)
+3.  **budget**: Cuantitativa discreta (no se incluyen centavos)
 
 ```{r normal distribution3}
 ggplot(datos, aes(x = budget)) +
@@ -86,7 +88,7 @@ qqline(datos$budget, col = "red", lwd = 2)
 
 Para esta variable se nota a simple vista que los datos no pertenecen a una distribución normal, los datos (ni en el histograma como en el QQ Plot) se ajustan a una distribución normal.
 
-4. **revenue**: Cuantitativa discreta (no se incluyen centavos)
+4.  **revenue**: Cuantitativa discreta (no se incluyen centavos)
 
 ```{r normal distribution 4}
 ggplot(datos, aes(x = revenue)) +
@@ -102,7 +104,7 @@ qqline(datos$revenue, col = "red", lwd = 2)
 
 La distribución para esta variable demuestra que sus datos estan en la directriz del QQ Plot, pero viendo la distribución en el histograma se puede apreciar que su distribución es uniforme.
 
-5. **original_title**: Cualitativa nominal
+5.  **original_title**: Cualitativa nominal
 
 La siguiente tabla de frecuencia muestra la cantidad total de apariciones por cada una de los titulos originales de las peliculas.
 
@@ -114,10 +116,10 @@ frecuency <- datos %>% count(originalTitle) %>% arrange(desc(n)) %>%
   filter(!str_starts(originalTitle, "<") & !str_starts(originalTitle, "2") & !str_starts(originalTitle, "3D") & !str_starts(originalTitle, "BU"))
 colnames(frecuency)[1] = "Titulo original"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
-6. **originalLanguage**: Cualitativa nominal
+6.  **originalLanguage**: Cualitativa nominal
 
 La siguiente tabla de frecuencia muestra la cantidad total de apariciones por cada una de los Idiomas originales de las peliculas.
 
@@ -125,10 +127,10 @@ La siguiente tabla de frecuencia muestra la cantidad total de apariciones por ca
 frecuency <- datos %>% count(originalLanguage) %>% arrange(desc(n))
 colnames(frecuency)[1] = "Idioma original"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
-7. **title**: Cualitativa nominal
+7.  **title**: Cualitativa nominal
 
 La siguiente tabla de frecuencia muestra la cantidad total de apariciones por cada una de los titulos de las peliculas.
 
@@ -136,10 +138,10 @@ La siguiente tabla de frecuencia muestra la cantidad total de apariciones por ca
 frecuency <- datos %>% count(title) %>% arrange(desc(n))
 colnames(frecuency)[1] = "Titutlo"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
-8. **homePage**: Cualitativa nominal
+8.  **homePage**: Cualitativa nominal
 
 La siguiente tabla de frecuencia muestra la cantidad total de apariciones por cada una de las home pages de las peliculas.
 
@@ -147,10 +149,10 @@ La siguiente tabla de frecuencia muestra la cantidad total de apariciones por ca
 frecuency <- datos %>% count(homePage) %>% arrange(desc(n)) %>% filter(!is.na(homePage))
 colnames(frecuency)[1] = "Home Page"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
-9. **video**: Cualitativa nominal
+9.  **video**: Cualitativa nominal
 
 La siguiente tabla de frecuencia muestra la cantidad total de peliculas que cuentan o no con un video.
 
@@ -158,7 +160,7 @@ La siguiente tabla de frecuencia muestra la cantidad total de peliculas que cuen
 frecuency <- datos %>% count(video) %>% arrange(desc(n))
 colnames(frecuency)[1] = "Video"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
 10. **director**: Cualitativa nominal
@@ -174,7 +176,7 @@ frecuency <- datos %>%
 
 colnames(frecuency)[1] = "Director"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
 11. **runtime**: Cuantitativa discreta
@@ -205,7 +207,7 @@ frecuency <- datos %>%
 
 colnames(frecuency)[1] = "Género"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
 13. **genresAmount**: Cuantitativa discreta
@@ -232,7 +234,7 @@ La siguiente tabla de frecuencia muestra la cantidad total de peliculas que ha h
 frecuency <- datos %>% count(productionCompany) %>% arrange(desc(n))
 colnames(frecuency)[1] = "Compañía productora"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
 15. **productionCoAmount**: Cuantitativa discreta
@@ -265,7 +267,7 @@ frecuency <- datos %>%
 colnames(frecuency)[1] = "País de Compañía productora"
 colnames(frecuency)[2] = "Cantidad"
 
-frecuency
+head(frecuency)
 ```
 
 17. **productionCountry**: Cualitativa nominal
@@ -280,26 +282,26 @@ frecuency <- datos %>%
   filter(productionCountry != "")
 colnames(frecuency)[1] = "País de producción"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
 18. **productionCountriesAmount**: Cuantitativa discreta
 
 ```{r normal distribution9}
 datos$productionCountriesAmount <- suppressWarnings(as.numeric(as.character(datos$productionCountriesAmount)))
-datos <- datos[!is.na(datos$productionCountriesAmount), ]
+datosx <- datos[!is.na(datos$productionCountriesAmount), ]
 
-if (nrow(datos) > 0) {
+if (nrow(datosx) > 0) {
   
-  ggplot(datos, aes(x = productionCountriesAmount)) +
+  ggplot(datosx, aes(x = productionCountriesAmount)) +
     geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
-    stat_function(fun = dnorm, args = list(mean = mean(datos$productionCountriesAmount, na.rm = TRUE),
-                                           sd = sd(datos$productionCountriesAmount, na.rm = TRUE)),
+    stat_function(fun = dnorm, args = list(mean = mean(datosx$productionCountriesAmount, na.rm = TRUE),
+                                           sd = sd(datosx$productionCountriesAmount, na.rm = TRUE)),
                   color = "red", size = 1) +
     ggtitle("Histograma para productionCountriesAmount")
 
-  qqnorm(datos$productionCountriesAmount, main = "QQ Plot de productionCountriesAmount")
-  qqline(datos$productionCountriesAmount, col = "red", lwd = 2)
+  qqnorm(datosx$productionCountriesAmount, main = "QQ Plot de productionCountriesAmount")
+  qqline(datosx$productionCountriesAmount, col = "red", lwd = 2)
   
 } else {
   print("No hay datos válidos en actorsPopularity después de la conversión.")
@@ -319,7 +321,7 @@ frecuency <- datos %>%
 
 colnames(frecuency)[1] = "Fecha de lanzamiento"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
 20. **voteCount**: Cuantitativa discreta
@@ -367,26 +369,26 @@ frecuency <- datos %>%
 
 colnames(frecuency)[1] = "Actor"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
 23. **actorsPopularity**: Cuantitativa continua
 
 ```{r normal distribution12}
 datos$actorsPopularity <- suppressWarnings(as.numeric(as.character(datos$actorsPopularity)))
-datos <- datos[!is.na(datos$actorsPopularity), ]
+datosX <- datos[!is.na(datos$actorsPopularity), ]
 
-if (nrow(datos) > 0) {
+if (nrow(datosX) > 0) {
   
-  ggplot(datos, aes(x = actorsPopularity)) +
+  ggplot(datosX, aes(x = actorsPopularity)) +
     geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
-    stat_function(fun = dnorm, args = list(mean = mean(datos$actorsPopularity, na.rm = TRUE),
-                                           sd = sd(datos$actorsPopularity, na.rm = TRUE)),
+    stat_function(fun = dnorm, args = list(mean = mean(datosX$actorsPopularity, na.rm = TRUE),
+                                           sd = sd(datosX$actorsPopularity, na.rm = TRUE)),
                   color = "red", size = 1) +
     ggtitle("Histograma para actorsPopularity")
 
-  qqnorm(datos$actorsPopularity, main = "QQ Plot de actorsPopularity")
-  qqline(datos$actorsPopularity, col = "red", lwd = 2)
+  qqnorm(datosX$actorsPopularity, main = "QQ Plot de actorsPopularity")
+  qqline(datosX$actorsPopularity, col = "red", lwd = 2)
   
 } else {
   print("No hay datos válidos en actorsPopularity después de la conversión.")
@@ -408,7 +410,7 @@ frecuency <- datos %>%
 
 colnames(frecuency)[1] = "Personaje"
 colnames(frecuency)[2] = "Cantidad"
-frecuency
+head(frecuency)
 ```
 
 25. **actorsAmount**: Cuantitativa discreta
@@ -431,19 +433,19 @@ Para esta variable se nota a simple vista que los datos no pertenecen a una dist
 
 ```{r normal distribution14}
 datos$castWomenAmount <- suppressWarnings(as.numeric(as.character(datos$castWomenAmount)))
-datos <- datos[!is.na(datos$castWomenAmount), ]
+datosX <- datos[!is.na(datos$castWomenAmount), ]
 
-if (nrow(datos) > 0) {
+if (nrow(datosX) > 0) {
   
-  ggplot(datos, aes(x = castWomenAmount)) +
+  ggplot(datosX, aes(x = castWomenAmount)) +
     geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
-    stat_function(fun = dnorm, args = list(mean = mean(datos$castWomenAmount, na.rm = TRUE),
-                                           sd = sd(datos$castWomenAmount, na.rm = TRUE)),
+    stat_function(fun = dnorm, args = list(mean = mean(datosX$castWomenAmount, na.rm = TRUE),
+                                           sd = sd(datosX$castWomenAmount, na.rm = TRUE)),
                   color = "red", size = 1) +
     ggtitle("Histograma para castWomanAmount")
 
-  qqnorm(datos$castWomenAmount, main = "QQ Plot de castWomenAmount")
-  qqline(datos$castWomenAmount, col = "red", lwd = 2)
+  qqnorm(datosX$castWomenAmount, main = "QQ Plot de castWomenAmount")
+  qqline(datosX$castWomenAmount, col = "red", lwd = 2)
   
 } else {
   print("No hay datos válidos en castMenAmount después de la conversión.")
@@ -456,19 +458,19 @@ Para esta variable se nota a simple vista que los datos no pertenecen a una dist
 
 ```{r normal distribution15}
 datos$castMenAmount <- suppressWarnings(as.numeric(as.character(datos$castMenAmount)))
-datos <- datos[!is.na(datos$castMenAmount), ]
+datosX <- datos[!is.na(datos$castMenAmount), ]
 
-if (nrow(datos) > 0) {
+if (nrow(datosX) > 0) {
   
-  ggplot(datos, aes(x = castMenAmount)) +
+  ggplot(datosX, aes(x = castMenAmount)) +
     geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +
-    stat_function(fun = dnorm, args = list(mean = mean(datos$castMenAmount, na.rm = TRUE),
-                                           sd = sd(datos$castMenAmount, na.rm = TRUE)),
+    stat_function(fun = dnorm, args = list(mean = mean(datosX$castMenAmount, na.rm = TRUE),
+                                           sd = sd(datosX$castMenAmount, na.rm = TRUE)),
                   color = "red", size = 1) +
     ggtitle("Histograma para castMenAmount")
 
-  qqnorm(datos$castMenAmount, main = "QQ Plot de castMenAmount")
-  qqline(datos$castMenAmount, col = "red", lwd = 2)
+  qqnorm(datosX$castMenAmount, main = "QQ Plot de castMenAmount")
+  qqline(datosX$castMenAmount, col = "red", lwd = 2)
   
 } else {
   print("No hay datos válidos en castMenAmount después de la conversión.")
@@ -476,11 +478,10 @@ if (nrow(datos) > 0) {
 
 ```
 
-Se puede ver por el QQ plot que los datos se asemejan un poco a una distribución normal pero se puede observar por la cola derecha de los datos, que no se ajustan a la directriz de la gráfica y esa curva que se crea esta bastante pronunciada. Esto demuestra que la variable castMenAmount no se ajusta a una distribución normal.
+Se puede ver por el QQ plot que los datos se asemejan un poco a una distribución normal pero se puede observar por la cola derecha de los datos, que no se ajustan a la directriz de la gráfica y esa curva que se crea esta bastante pronunciada.
+Esto demuestra que la variable castMenAmount no se ajusta a una distribución normal.
 
 ## Preguntas
-
-(Son 16 más 3 y 3 extras. Las primeras 8+3 Flavio las demás Prince)
 
 ### ¿Cuáles son las 10 películas que contaron con más presupuesto?
 
@@ -729,6 +730,7 @@ El 2022 no está completo dentro del dataset y por eso tiene resultados tan bajo
 ### ¿Es posible que la cantidad de hombres y mujeres en el reparto influya en la popularidad y los ingresos de las películas?
 
 ```{r Pregunta 9}
+
 movie_cast <- head(datos[, c('revenue','castMenAmount','castWomenAmount')],300)
 movie_cast$diferencia_cast <- as.numeric(movie_cast$castMenAmount) - as.numeric(movie_cast$castWomenAmount)
 
@@ -782,7 +784,6 @@ Para corroborar este dato podemos calcular la variable de correlación que es `r
 ```{r Pregunta 12}
 library(dplyr)
 library(ggplot2)
-
 # Asegurar que releaseDate sea de tipo fecha
 datos$releaseDate <- as.Date(datos$releaseDate)
 
@@ -815,7 +816,6 @@ Se puede ver que los mejores meses para generar ingresos es en Junio y Mayo.
 
 ```{r Pregunta 13.1}
 library(dplyr)
-
 datos$releaseDate <- as.Date(datos$releaseDate)
 
 datos$mes <- format(datos$releaseDate, "%m")
@@ -826,13 +826,12 @@ o_revenueM <- o_revenue %>% group_by(mes) %>% summarize(total_revenue = sum(reve
 o_revenueM$mes <- month.name[as.numeric(o_revenueM$mes)]
 ```
 
-Los meses donde se han visto los mejores lanzamientos han sido: `r o_revenueM$mes`. 
+Los meses donde se han visto los mejores lanzamientos han sido: `r o_revenueM$mes`.
 
 A continuación se muestra el promedio de peliculas por mes:
 
 ```{r Pregunta 13.2}
 library(dplyr)
-
 datos$releaseDate <- as.Date(datos$releaseDate)
 
 datos$mes <- format(datos$releaseDate, "%m")
@@ -847,20 +846,21 @@ movie_count$promedio_peliculas <- movie_count$count / as.numeric(total_years)
 
 movie_count[, c('mes','promedio_peliculas')]
 ```
+
 ### ¿Cómo se correlacionan las calificaciones con el éxito comercial?
 
 ```{r Pregunta 14}
 success <- datos[datos$revenue > budget * 3]
 cor(success$voteAvg, success$revenue, use = "complete.obs")
 ```
-Según el coeficiente de correlación entre las calificaciones y el éxito comercial de una pelicula, nos indica que no existe una clara relación entre estas variables y que pueden haber peliculas que no sean exitosos comerciales pero tengan buena calificación como exitos comerciales que tengan mala calificación, entre otros posibles casos. 
+
+Según el coeficiente de correlación entre las calificaciones y el éxito comercial de una pelicula, nos indica que no existe una clara relación entre estas variables y que pueden haber peliculas que no sean exitosos comerciales pero tengan buena calificación como exitos comerciales que tengan mala calificación, entre otros posibles casos.
 
 ### ¿Qué estrategias de marketing, como videos promocionales o páginas oficiales, generan mejores resultados?
 
 ```{r Pregunta 15}
 library(ggplot2)
 library(dplyr)
-
 tabla1 <- datos[is.na(datos$homePage) & datos$video == TRUE, ]
 tabla2 <- datos[!is.na(datos$homePage) & datos$video == FALSE, ]
 tabla3 <- datos[!is.na(datos$homePage) & datos$video == TRUE, ]
@@ -884,10 +884,15 @@ Se ve que la mejor estrategia de marketing son las páginas oficiles sin ofrecer
 library(dplyr)
 library(tidyr)
 
-success <- datos[datos$revenue > budget * 3]
-success <- success %>% 
-  mutate(popularidad_media = sapply(strsplit(as.character(actorsPopularity), "\\|"),
+datos <- read.csv("data/movies.csv")
+succes <- datos %>% filter(revenue > budget * 3)
+
+success <- datos %>% 
+  filter(revenue > budget * 3) %>% 
+  mutate(actorsPopularity = ifelse(actorsPopularity == "", NA, as.character(actorsPopularity)),
+         popularidad_media = sapply(strsplit(actorsPopularity, "\\|"), 
                                     function(x) mean(as.numeric(x), na.rm = TRUE)))
+
 popularity <- head(success[, c('popularidad_media','revenue')],300)
 plot(popularity$popularidad_media, popularity$revenue,
      main = "Relación entre Popularidad de actores y Ganancia",
@@ -953,7 +958,6 @@ Como se puede ver, el país que produce la mayor cantidad de películas es los E
 
 ```{r Pregunta Extra 3}
 library(data.table)
-
 # Convert to data.table for efficiency
 setDT(datos)
 datos[, genresAmount := as.numeric(genresAmount)]
@@ -982,9 +986,10 @@ De hecho parece que el sweet spot es 3 géneros.
 ### ¿Cómo ha evolucionado el presupuesto el presupuesto promedio de las peliculas a lo largo de los años?
 
 ```{r Pregunta Extra 4}
+datos$releaseDate <- as.Date(datos$releaseDate)
 datos$year <- format(datos$releaseDate, "%Y")
-datos <- datos[datos$budget > 0]
-budget_year <- datos %>% group_by(year) %>% summarise(presupuesto_promedio = mean(budget))
+datos1 <- datos %>% filter(budget > 0)
+budget_year <- datos1 %>% group_by(year) %>% summarise(presupuesto_promedio = mean(budget))
 
 ggplot(budget_year, aes(x = year, y = presupuesto_promedio, group = 1)) + 
   geom_line(color = "blue", size = 1) +
@@ -994,14 +999,16 @@ ggplot(budget_year, aes(x = year, y = presupuesto_promedio, group = 1)) +
 
 ```
 
-Se puede ver un aumento en el presupuesto a lo largo de los años, lleagndo a su punto más alto a finales de los años 90. El presupuesto promedio tuvo un leve descenso en este siglo XXI pero ya en años más recientes el presupuesto promedio por año ha estado en ascenso.
+Se puede ver un aumento en el presupuesto a lo largo de los años, lleagndo a su punto más alto a finales de los años 90.
+El presupuesto promedio tuvo un leve descenso en este siglo XXI pero ya en años más recientes el presupuesto promedio por año ha estado en ascenso.
 
 ### ¿En qué años se han producido las películas con los mayores presupuestos?
 
 ```{r Pregunta Extra 5}
+
 datos$year <- format(datos$releaseDate, "%Y")
-datos <- datos[order(datos$budget, decreasing = TRUE),]
-budget_year <- head(datos[, c('year','budget', 'title')],10)
+datosX <- datos[order(datos$budget, decreasing = TRUE),]
+budget_year <- head(datosX[, c('year','budget', 'title')],10)
 colnames(budget_year)[1] = "Año"
 colnames(budget_year)[2] = "Presupuesto"
 colnames(budget_year)[3] = "Pelicula"
@@ -1016,23 +1023,31 @@ Estos serían los años en donde se han producido las peliculas con mayores pres
 library(dplyr)
 library(tidyr)
 library(stringr)
+library(ggplot2)
 
-datos <- datos %>%
-  mutate(productionCompany = str_squish(productionCompany)) %>%  # Elimina espacios extra dentro del string
+datos1 <- datos %>%
+  mutate(productionCompany = ifelse(is.na(productionCompany), "", as.character(productionCompany))) %>%
+  mutate(productionCompany = str_squish(productionCompany)) %>%  # Elimina espacios extra
   separate_rows(productionCompany, sep = "\\|") %>%  # Separa en filas individuales
-  mutate(productionCompany = str_trim(productionCompany))  # Elimina espacios extra en cada nombre
+  mutate(productionCompany = str_trim(productionCompany))  # Elimina espacios en cada nombre
 
-companies <- datos %>% group_by(productionCompany) %>% summarise(ingresos = sum(revenue, na.rm = TRUE), total_peliculas = n())
+companies <- datos1 %>%
+  group_by(productionCompany) %>%
+  summarise(ingresos = sum(revenue, na.rm = TRUE), total_peliculas = n())
+
 companies <- companies[, c('productionCompany', 'ingresos')]
-companies <- head(companies[order(companies$ingresos, decreasing = TRUE),],10)
-colnames(companies)[1] = "Compañia productora"
-companies
-ggplot(companies, aes(x=`Compañia productora`, y=ingresos, fill = `Compañia productora`)) + geom_bar(stat="identity") +
-  scale_fill_manual(values = c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD", 
-             "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF")) +
+companies <- head(companies[order(companies$ingresos, decreasing = TRUE), ], 10)
+colnames(companies)[1] <- "Compañia productora"
+
+ggplot(companies, aes(x = `Compañia productora`, y = ingresos, fill = `Compañia productora`)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD",
+                               "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF")) +
   theme(axis.text.x = element_blank(),  # Oculta etiquetas del eje X
         axis.ticks.x = element_blank())
 
+
 ```
 
-Estas son las Compañias productoras más exitosas en terminos de los ingresos totales generados. Es apreciable estudios como "Warner Bros. Pictures" tenga el mayor número de ingresos debido a que es uno de las compañias más longevas y que sigue vigente a día de hoy.
+Estas son las Compañias productoras más exitosas en terminos de los ingresos totales generados.
+Es apreciable estudios como "Warner Bros. Pictures" tenga el mayor número de ingresos debido a que es uno de las compañias más longevas y que sigue vigente a día de hoy.

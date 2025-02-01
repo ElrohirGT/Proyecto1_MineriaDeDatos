@@ -108,8 +108,10 @@ La siguiente tabla de frecuencia muestra la cantidad total de apariciones por ca
 
 ```{r frecuency table1}
 library(dplyr)
+library(stringr)
 
-frecuency <- datos %>% count(originalTitle) %>% arrange(desc(n))
+frecuency <- datos %>% count(originalTitle) %>% arrange(desc(n)) %>%
+  filter(!str_starts(originalTitle, "<") & !str_starts(originalTitle, "2") & !str_starts(originalTitle, "3D") & !str_starts(originalTitle, "BU"))
 colnames(frecuency)[1] = "Titulo original"
 colnames(frecuency)[2] = "Cantidad"
 frecuency

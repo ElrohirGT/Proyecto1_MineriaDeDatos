@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 [Repositorio](https://github.com/ElrohirGT/Proyecto1_MineriaDeDatos.git)
 
-# Carga del CSV
+# Prepocesamiento de los datos
 ```{r}
 datos <- read.csv("../data/movies.csv")
 datos_num <- datos[, sapply(datos, is.numeric)]
@@ -27,4 +27,19 @@ datos_num <- datos_num[, -1]
 
 Acá podemos encontrar las siguientes variables: **`r colnames(datos)`**. 
 
-Para este análisis solo se necesitaran de las variables que se categorizaron como cuantitativas durante el análisis exploratorio de igual forma otra variable que no aporta información al agrupamiento es justamente la que contiene el id de los datos, en este caso siendo "id". Obteniendo las siguientes columnas a analizar: **`r colnames(datos_num)`**.
+Para el análisis de los datos solo se necesitaran de las variables que se categorizaron como cuantitativas durante el análisis exploratorio. Se toma esta decisión debido a que en los métodos de clustering a utilizar se basan en variables cuantitativas por lo que para evitar ambiguedades se omite el agrupamiente de este tipo de variables y obtener un mejor resultado en el agrupamiento de datos. De igual forma otra variable que no aporta información al agrupamiento es justamente la que contiene el id de los datos, en este caso siendo "id", esto se debe a que esta variable al agruparla no aporta ningún tipo de información. 
+
+Obteniendo las siguientes columnas a analizar: **`r colnames(datos_num)`**.
+
+Viendo con más detalle cada una de las variables escogidas.
+
+- budget: el presupuesto utilizado para la película.
+- revenue: las ganancias de la película. 
+- runtime: duración total de la película.
+- popularity: índice de popularidad de la película, calculada semanalmente.
+- voteAvg: promedio de votos para la película.
+- voteCount: número de votos para la película.
+- genresAmount: cantidad total de generos destinados a una película.
+- productionCoAmount: cantidad de compañías productoras que participaron en la película.
+- productionCountriesAmount: cantidad de países en los que se rodó la película.
+- actorsAmount: cantidad de personas que actuan en la película.

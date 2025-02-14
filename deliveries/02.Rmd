@@ -21,6 +21,10 @@ knitr::opts_chunk$set(echo = FALSE)
 # Carga del CSV
 ```{r}
 datos <- read.csv("../data/movies.csv")
+datos_num <- datos[, sapply(datos, is.numeric)]
+datos_num <- datos_num[, -1]
 ```
 
-Acá podemos encontrar las siguientes variables: `r colnames(datos)`.
+Acá podemos encontrar las siguientes variables: **`r colnames(datos)`**. 
+
+Para este análisis solo se necesitaran de las variables que se categorizaron como cuantitativas durante el análisis exploratorio de igual forma otra variable que no aporta información al agrupamiento es justamente la que contiene el id de los datos, en este caso siendo "id". Obteniendo las siguientes columnas a analizar: **`r colnames(datos_num)`**.

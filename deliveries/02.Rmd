@@ -20,6 +20,15 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Prepocesamiento de los datos
 ```{r}
+library(cluster) #Para calcular la silueta
+library(e1071)#para cmeans
+library(NbClust) #Para determinar el número de clusters óptimo
+library(hopkins) #Para revisar si vale la pena hacer agrupamiento
+library(GGally) #Para hacer el conjunto de graficos
+library(FeatureImpCluster) #Para revisar la importancia de las variables en los grupos.
+library(pheatmap) #Para hacer mapa de calor
+library(ggplot2)
+
 datos <- read.csv("../data/movies.csv")
 datos_num <- datos[, sapply(datos, is.numeric)]
 datos_num <- datos_num[, -1]
@@ -43,3 +52,11 @@ Viendo con más detalle cada una de las variables escogidas.
 - productionCoAmount: cantidad de compañías productoras que participaron en la película.
 - productionCountriesAmount: cantidad de países en los que se rodó la película.
 - actorsAmount: cantidad de personas que actuan en la película.
+
+# Hopkings y VAT
+```{r iniciso 2}
+set.seed(123)
+dist_matrix <- as.matrix(dist(datos_num))
+heatmap(dist_matrix, col = terrain.colors(256), main = "Matriz de Distancia")
+```
+Analizando el estadístico de Hopkings obtenemos que su valor es de **`hopkins(datos_num)`**, esto nos indica que los datos tienen una fuerte estructura de agrupamiento. Para 

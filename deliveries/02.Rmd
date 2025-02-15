@@ -18,13 +18,16 @@ knitr::opts_chunk$set(echo = FALSE)
 
 [Repositorio](https://github.com/ElrohirGT/Proyecto1_MineriaDeDatos.git)
 
-# Prepocesamiento de los datos
+# Clustering
+
+## Prepocesamiento de los datos
 ```{r}
 library(cluster) 
 library(hopkins)
 library(factoextra)
 library(ggplot2)
 library(fpc)
+library(modeest)
 
 datos <- read.csv("../data/movies.csv")
 datos_num <- datos[, sapply(datos, is.numeric)]
@@ -50,21 +53,23 @@ Viendo con más detalle cada una de las variables escogidas.
 - productionCountriesAmount: cantidad de países en los que se rodó la película.
 - actorsAmount: cantidad de personas que actuan en la película.
 
-# Hopkings y VAT
+## Hopkings y VAT
 ```{r iniciso 2}
 set.seed(123)
-datos_dist <- dist(head(datos_num, 300))
-fviz_dist(datos_dist, show_labels = F)
+hops <- hopkins(datos_num)
+cat("Estadistico de Hopkins: ", hops, "\n")
 ```
-Analizando el estadístico de Hopkings obtenemos que su valor es de **`hopkins(datos_num)`**, esto nos indica que los datos tienen una fuerte estructura de agrupamiento. Para corrobar que existan grupos de datos, se realiza la "Evaluación Visual de Tendencia".
+
+Analizando el estadístico de Hopkings obtenemos que su valor es de **1**, esto nos indica que los datos tienen una fuerte estructura de agrupamiento. Para corrobar que existan grupos de datos, se realiza la "Evaluación Visual de Tendencia".
 
 ```{r VAT}
 datos_dist <- dist(head(datos_num, 300))
 fviz_dist(datos_dist, show_labels = F)
 ```
+
 La EVT (evaluación visuald e tendencia) se hizo con una muestra de 300 debido a que el dataset era muy grande para procesarlo por completo y vemos que existe una tendencia de agrupamiento para los datos.
 
-# Método de codo
+## Método de codo
 
 ```{r Método de codo}
 fviz_nbclust(datos_num, kmeans, method = "wss") + ggtitle("Metodo de Codo")
@@ -72,7 +77,7 @@ fviz_nbclust(datos_num, kmeans, method = "wss") + ggtitle("Metodo de Codo")
 
 Evaluando el dataset con el método de codo se demuestra que es mejor agrupar los datos en un total de 3 grupos para poder obtener la mayor información de cada uno de los grupos de datos. Se hace la elección de 3 grupos debido a que es donde se presenta el mayor cambio de pendiente en la gráfica.
 
-# K-medias y CLustering jerárquico
+## K-medias y CLustering jerárquico
 
 Este es el gráfico obtenido de K-medias:
 
@@ -87,13 +92,13 @@ Este es el el dendograma que se genera para el clustering jerárquico:
 dist_matrix <- dist(datos_num, method = "euclidean")
 hc <- hclust(dist_matrix, method = "complete")
 
-plot(hc, main="Dendograma", xlab="Observaciones", ylab="Distancia")
+plot(hc, main="Dendrograma", xlab="Observaciones", ylab="Distancia")
 clusters <- cutree(hc, k=3)
 ```
 
 Haciendo una comparación entre la gráfica obtenida por K-Means y por el dendograma del agrupamiento jerarquico podemos ver que los datos se separan en tres grupos principales, indicado anteriormente por el método de codo. A su vez podemos ver que uno de los grupos se encuentra más disperso, debido a las limitaciones de software esto no es visible en el dendograma pero sí en K-means.
 
-# Método de la silueta
+## Método de la silueta
 
 Este método nos ayudará a determinar la calidad del agrupamiento. Midiendo qué tan bien están agrupados los puntos dentro de su cluster y qué tan separados están de otros clusters. A continuación se muestra el gráfico del método de la silueta para los métodos de clusterings anteriores. 
 
@@ -106,4 +111,12 @@ plot(sil, col=1:3, border=NA)
 
 ```
 
-Se puede apreciar que ambos métodos de clustering agrupan correctamente cada punto en su respectivo cluster. Esto lo sabemos cuando vemos el valor de "average silhouette width" que es 0.8 y 0.93 para K-means y hc (hierarchy clustering); si este valor hubiera sido cercano a 0 nos indicaria que el clustering no es muy claro o no esta bien definido, en caso de ser un número negativo sugiere que la asignación de los clusters podría ser incorrecta. 
+Se puede apreciar que ambos métodos de clustering agrupan correctamente cada punto en su respectivo cluster. Esto lo sabemos cuando vemos el valor de "average silhouette width" que es 0.8 y 0.93 para K-means y hc (hierarchy clustering); si este valor hubiera sido cercano a 0 nos indicaria que el clustering no es muy claro o no esta bien definido, en caso de ser un número negativo sugiere que la asignación de los clusters podría ser incorrecta. Ya simplemente comparando los "average silhouette width" entre los diferentes métodos vemos que el hc es el mejor método.
+
+## Interpretación de los grupos
+
+```{r groups table}
+datos_num$grupo <- as.factor(clusters)
+aggregate(datos_num[, -ncol(datos_num)], by = list(datos_num$grupo), FUN = mean)
+```
+Se hizo la separación de los datos en tres grupos como lo recomendaba el método de codo. En la tabla anterior podemos ver como se comporta cada variable en su respectivo cluster, mostrando la media de las variables. Inicialmente con repecto al presupuesto podemos ver 3 distintos valores pero los valores del grupo 2 y 3 no se alejan tanto como si lo hace el valor del grupo 1, estoy puede indicar la cantidad de presupuesto de la pelicula siendo el grupo 1 peliculas con presupuesto bajo y el grupo 2 y 3 con un presupuesto moderado/alto. Se puede ver que en relación al presupuesto invertido la pelicula es más popular, dando a entender que aquellas peliculas que se les otorga un mayor presupuesto pueden ser secuelas o franquicias famosas. Igualmente vemos que las peliculas al ser menos famosas, teniendo un presupuesto bajo se afirma que a su vez menos gente las conoce y por ende tiene menos calificaciones. Es interesante ver que se aprecia una tendencia en que a mayor presupuesto, se tiene una mayor duración; esto indica que la duración de la pelicula se puede dar por muchos factores pero que la cantidad de dinero en producción determina que tan larga puede ser esta.  En las demás categorias se pueden ver muchas similitudes entre en cada uno de los grupos como en la cantidad de géneros o la cantidad de países en donde se rodó la película. Esto es el análisis que se le pudo sacar a los datos en base a las variables analizadas.

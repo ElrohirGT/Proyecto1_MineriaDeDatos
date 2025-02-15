@@ -20,13 +20,9 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Prepocesamiento de los datos
 ```{r}
-library(cluster) #Para calcular la silueta
-library(e1071)#para cmeans
-library(NbClust) #Para determinar el número de clusters óptimo
-library(hopkins) #Para revisar si vale la pena hacer agrupamiento
-library(GGally) #Para hacer el conjunto de graficos
-library(FeatureImpCluster) #Para revisar la importancia de las variables en los grupos.
-library(pheatmap) #Para hacer mapa de calor
+library(cluster) 
+library(hopkins)
+library(factoextra)
 library(ggplot2)
 
 datos <- read.csv("../data/movies.csv")
@@ -56,7 +52,12 @@ Viendo con más detalle cada una de las variables escogidas.
 # Hopkings y VAT
 ```{r iniciso 2}
 set.seed(123)
-dist_matrix <- as.matrix(dist(datos_num))
-heatmap(dist_matrix, col = terrain.colors(256), main = "Matriz de Distancia")
+datos_dist <- dist(head(datos_num, 300))
+fviz_dist(datos_dist, show_labels = F)
 ```
 Analizando el estadístico de Hopkings obtenemos que su valor es de **`hopkins(datos_num)`**, esto nos indica que los datos tienen una fuerte estructura de agrupamiento. Para 
+
+```{r VAT}
+datos_dist <- dist(head(datos_num, 300))
+fviz_dist(datos_dist, show_labels = F)
+```

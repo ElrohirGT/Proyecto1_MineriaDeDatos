@@ -91,8 +91,19 @@ plot(hc, main="Dendograma", xlab="Observaciones", ylab="Distancia")
 clusters <- cutree(hc, k=3)
 ```
 
+Haciendo una comparación entre la gráfica obtenida por K-Means y por el dendograma del agrupamiento jerarquico podemos ver que los datos se separan en tres grupos principales, indicado anteriormente por el método de codo. A su vez podemos ver que uno de los grupos se encuentra más disperso, debido a las limitaciones de software esto no es visible en el dendograma pero sí en K-means.
 
+# Método de la silueta
 
+Este método nos ayudará a determinar la calidad del agrupamiento. Midiendo qué tan bien están agrupados los puntos dentro de su cluster y qué tan separados están de otros clusters. A continuación se muestra el gráfico del método de la silueta para los métodos de clusterings anteriores. 
 
+```{r Silhouette km}
+sil <- silhouette(km$cluster, dist(datos_num))
+plot(sil, col=1:3, border=NA)
 
+sil <- silhouette(clusters, dist(datos_num))
+plot(sil, col=1:3, border=NA)
 
+```
+
+Se puede apreciar que ambos métodos de clustering agrupan correctamente cada punto en su respectivo cluster. Esto lo sabemos cuando vemos el valor de "average silhouette width" que es 0.8 y 0.93 para K-means y hc (hierarchy clustering); si este valor hubiera sido cercano a 0 nos indicaria que el clustering no es muy claro o no esta bien definido, en caso de ser un número negativo sugiere que la asignación de los clusters podría ser incorrecta. 

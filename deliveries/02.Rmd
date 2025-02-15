@@ -55,9 +55,18 @@ set.seed(123)
 datos_dist <- dist(head(datos_num, 300))
 fviz_dist(datos_dist, show_labels = F)
 ```
-Analizando el estadístico de Hopkings obtenemos que su valor es de **`hopkins(datos_num)`**, esto nos indica que los datos tienen una fuerte estructura de agrupamiento. Para 
+Analizando el estadístico de Hopkings obtenemos que su valor es de **`hopkins(datos_num)`**, esto nos indica que los datos tienen una fuerte estructura de agrupamiento. Para corrobar que existan grupos de datos, se realiza la "Evaluación Visual de Tendencia".
 
 ```{r VAT}
 datos_dist <- dist(head(datos_num, 300))
 fviz_dist(datos_dist, show_labels = F)
 ```
+La EVT (evaluación visuald e tendencia) se hizo con una muestra de 300 debido a que el dataset era muy grande para procesarlo por completo y vemos que existe una tendencia de agrupamiento para los datos.
+
+# Método de codo
+
+```{r Método de codo}
+fviz_nbclust(datos_num, kmeans, method = "wss") + ggtitle("Metodo de Codo")
+```
+
+Evaluando el dataset con el método de codo se demuestra que es mejor agrupar los datos en un total de 3 grupos para poder obtener la mayor información de cada uno de los grupos de datos. Se hace la elección de 3 grupos debido a que es donde se presenta el mayor cambio de pendiente en la gráfica.

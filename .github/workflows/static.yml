@@ -36,7 +36,7 @@ jobs:
       - name: Create out Dir
         run: |
           mkdir out
-          mv deliveries/01.html out/index.html
+          mv deliveries/02.html out/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

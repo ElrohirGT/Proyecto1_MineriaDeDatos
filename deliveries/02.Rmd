@@ -24,6 +24,7 @@ library(cluster)
 library(hopkins)
 library(factoextra)
 library(ggplot2)
+library(fpc)
 
 datos <- read.csv("../data/movies.csv")
 datos_num <- datos[, sapply(datos, is.numeric)]
@@ -70,3 +71,28 @@ fviz_nbclust(datos_num, kmeans, method = "wss") + ggtitle("Metodo de Codo")
 ```
 
 Evaluando el dataset con el método de codo se demuestra que es mejor agrupar los datos en un total de 3 grupos para poder obtener la mayor información de cada uno de los grupos de datos. Se hace la elección de 3 grupos debido a que es donde se presenta el mayor cambio de pendiente en la gráfica.
+
+# K-medias y CLustering jerárquico
+
+Este es el gráfico obtenido de K-medias:
+
+```{r K-means}
+km <- kmeans(datos_num, 3,iter.max =100)
+plotcluster(datos_num, km$cluster)
+```
+
+Este es el el dendograma que se genera para el clustering jerárquico:
+
+```{r Agrupamiento jerarquico}
+dist_matrix <- dist(datos_num, method = "euclidean")
+hc <- hclust(dist_matrix, method = "complete")
+
+plot(hc, main="Dendograma", xlab="Observaciones", ylab="Distancia")
+clusters <- cutree(hc, k=3)
+```
+
+
+
+
+
+

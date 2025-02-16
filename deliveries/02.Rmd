@@ -140,6 +140,9 @@ library(psych)
 library(corpcor)
 library(nFactors)
 
+datos <- read.csv("../data/movies.csv")
+datos_num <- datos[, sapply(datos, is.numeric)]
+
 kmo_result <- KMO(cor(datos_num))
 print(kmo_result)
 

@@ -25,6 +25,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(cluster) 
 library(hopkins)
 library(factoextra)
+# install.packages(factoextra)
 library(ggplot2)
 library(fpc)
 library(modeest)
@@ -120,3 +121,65 @@ datos_num$grupo <- as.factor(clusters)
 aggregate(datos_num[, -ncol(datos_num)], by = list(datos_num$grupo), FUN = mean)
 ```
 Se hizo la separación de los datos en tres grupos como lo recomendaba el método de codo. En la tabla anterior podemos ver como se comporta cada variable en su respectivo cluster, mostrando la media de las variables. Inicialmente con repecto al presupuesto podemos ver 3 distintos valores pero los valores del grupo 2 y 3 no se alejan tanto como si lo hace el valor del grupo 1, estoy puede indicar la cantidad de presupuesto de la pelicula siendo el grupo 1 peliculas con presupuesto bajo y el grupo 2 y 3 con un presupuesto moderado/alto. Se puede ver que en relación al presupuesto invertido la pelicula es más popular, dando a entender que aquellas peliculas que se les otorga un mayor presupuesto pueden ser secuelas o franquicias famosas. Igualmente vemos que las peliculas al ser menos famosas, teniendo un presupuesto bajo se afirma que a su vez menos gente las conoce y por ende tiene menos calificaciones. Es interesante ver que se aprecia una tendencia en que a mayor presupuesto, se tiene una mayor duración; esto indica que la duración de la pelicula se puede dar por muchos factores pero que la cantidad de dinero en producción determina que tan larga puede ser esta.  En las demás categorias se pueden ver muchas similitudes entre en cada uno de los grupos como en la cantidad de géneros o la cantidad de países en donde se rodó la película. Esto es el análisis que se le pudo sacar a los datos en base a las variables analizadas.
+
+# PCA
+
+
+**3.1. Estudie si es posible hacer transformaciones en las variables categóricas para incluirlas en
+el PCA, ¿valdrá la pena?**
+
+Sí se puede realizar PCA en variables categóricas aunque solamente si éstas son traducibles a números ordenados, si en su lugar se tienen propiedades como: "verde", "rojo", "azul" y no implican un orden entre ellas entonces no es posible.
+
+Dentro de las variables que tenemos en el data set de películas, ninguna se puede traducir a números ordenados puesto que las variables no ordenadas son.
+
+
+**3.2. Estudie si es conveniente hacer un Análisis de Componentes Principales. Recuerde que puede usar el índice KMO y el test de esfericidad de Bartlett.**
+
+```{r}
+library(psych)
+library(corpcor)
+library(nFactors)
+
+kmo_result <- KMO(cor(datos_num))
+print(kmo_result)
+
+bartlett_result <- cortest.bartlett(cor(datos_num), n = nrow(datos_num))
+print(bartlett_result)
+```
+
+Según los índices KMO la mayoría de variables son buenas o excelentes para aplicar PCA con la excepción de voteAvg. La prueba de Bartlett nos dice que efectivamente la matriz de correlación no es una matriz de identidad por lo tanto hay correlaciones significativas en la data. 
+
+**3.3. Haga un análisis de componentes principales con las variables numéricas, discuta los
+resultados e interprete los componentes.**
+
+```{r}
+# Instalar y cargar los paquetes necesarios
+# install.packages("factoextra")  # Para visualización de PCA
+# install.packages("ggplot2")      # Para gráficos adicionales
+library(psych)
+#library(factoextra)
+library(ggplot2)
+
+# Estandarización de los datos (importante para PCA)
+datos_pca_scaled <- scale(datos_num)
+
+# Aplicar PCA
+pca_result <- prcomp(datos_pca_scaled, center = TRUE, scale = TRUE)
+
+# Resumen del PCA
+summary(pca_result)
+
+# Visualización de la varianza explicada
+fviz_eig(pca_result) 
+
+# Biplot de las dos primeras componentes principales
+fviz_pca_biplot(pca_result, repel = TRUE, col.var = "blue", col.ind = "red")
+
+# Gráfico de contribución de las variables a la primera componente principal
+fviz_contrib(pca_result, choice = "var", axes = 1)
+
+# Gráfico de contribución de las variables a la segunda componente principal
+fviz_contrib(pca_result, choice = "var", axes = 2)
+
+```
+

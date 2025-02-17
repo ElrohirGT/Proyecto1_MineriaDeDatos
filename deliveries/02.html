@@ -1674,7 +1674,7 @@ generación de reglas. Hágalo y discútalo.</p>
 ## set transactions ...[24 item(s), 10000 transaction(s)] done [0.00s].
 ## sorting and recoding items ... [12 item(s)] done [0.00s].
 ## creating transaction tree ... done [0.00s].
-## checking subsets of size 1 2 3 4 5 6 done [0.05s].
+## checking subsets of size 1 2 3 4 5 6 done [0.01s].
 ## writing ... [455 rule(s)] done [0.00s].
 ## creating S4 object  ... done [0.00s].</code></pre>
 <pre><code>##       lhs                      rhs                support confidence coverage      lift count
@@ -3009,7 +3009,7 @@ propiedades como: “verde”, “rojo”, “azul” y no implican un orden ent
 ellas entonces no es posible.</p>
 <p>Dentro de las variables que tenemos en el data set de películas,
 ninguna se puede traducir a números ordenados puesto que las variables
-no ordenadas son.</p>
+no son ordenadas.</p>
 <p><strong>3.2. Estudie si es conveniente hacer un Análisis de
 Componentes Principales. Recuerde que puede usar el índice KMO y el test
 de esfericidad de Bartlett.</strong></p>
@@ -3102,6 +3102,63 @@ veo por las componentes principales de cada variable superior son:</p>
 <ul>
 <li>PC1: Éxito Financiero de una película</li>
 <li>PC5: Qué tan amigable al público general es la película</li>
+</ul>
+</div>
+<div id="conclusiones" class="section level1">
+<h1>Conclusiones</h1>
+<p>El clustering de los datos nos indicó que es óptimo separar el
+conjunto de datos en 3 grupos:</p>
+<ul>
+<li>Group 1: Identificado principalmente por su baja cantidad de dinero
+presupuestado, en general represeta al conjunto de películas
+independientes u <em>underground</em>.</li>
+<li>Grupo 3: Representa a todos los blockbusters del cine,
+proyectos/franquicias enormes con una gran cantidad de presupuesto y en
+general, duración y cuenta de votos más altos.</li>
+<li>Grupo 2: El grupo dos representa todas las películas con presupuesto
+medio/alto cuya principal diferencia respecto al grupo 3 es su
+popularidad, pues su media es de lejos la más alta en este aspecto.</li>
+</ul>
+<p>Pasando al análisis de componentes principales o PCA podemos afirmar
+que 6 u 8 es el número ideal para la reducción, en este análisis se
+decidió usar 6 representando así más del 70% de la variabilidad de los
+datos. Muchas de las variables generadas por el PCA fueron realmente
+combinaciones lineales solamente sin un claro significado en el mundo
+real, sin embargo se pudieron encontrar 2 variables que sería
+interesante explorar más a fondo en otro análisis a futuro:</p>
+<ul>
+<li>PC1: Representando el éxito financiero de una película.</li>
+<li>PC5: Qué tan amigable al público general es la película.</li>
+</ul>
+<p>Regresando al análisis a priori que genera reglas en base a los
+datos, las dos más interesantes fueron:</p>
+<ul>
+<li><p>Tener un Budget muy bajo, una popularidad baja pero un voteCount
+moderado generalmente lleva a un voteAvg bueno! Esta regla se cumple con
+casi un 90% de confianza y tiene un soporte del 0.0114 en todo el
+dataset. El soporte puede ser bajo pero es que justamente la regla está
+hablando de películas underground que normalmente pasan
+desapercibidas.</p></li>
+<li><p>Si tienes un budget muy bajo y un runtime corto no importa que
+consigas un average de votos bueno, si no logras subir tu popularidad,
+la data predice que tu revenue será muy bajo con un 99% de confianza y
+un 0.23 de representación. Por lo tanto esto nos dice que la popularidad
+es importante!</p></li>
+</ul>
+<p>Finalmente nuestras sugerencias principales a CineVisión serían:</p>
+<ul>
+<li>La popularidad de una película es un factor clave en el éxito en
+revenue obtenido de un proyecto! No escatimen en el marketing y el
+desarrollo de una historia/proyecto de calidad aunque tengan un budget
+bajo.</li>
+<li>Solo hay 3 grupos de proyectos dentro de los datos, existen varias
+estrategias para entrar a distintas secciones del mercado, intenta
+enfocarte en uno de los 3 sub-mercados y recuerda, es mejor ser cabeza
+de ratón que cola de león.</li>
+<li>En futuros análisis recomendamos investigar cómo se representa el
+éxito financier de una película respecto a qué tan amigable es para el
+público general, pueden usar la misma minimización de PCA que utilizamos
+en este estudio.</li>
 </ul>
 </div>
 

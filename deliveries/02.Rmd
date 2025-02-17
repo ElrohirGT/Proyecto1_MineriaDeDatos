@@ -169,7 +169,7 @@ el PCA, ¿valdrá la pena?**
 
 Sí se puede realizar PCA en variables categóricas aunque solamente si éstas son traducibles a números ordenados, si en su lugar se tienen propiedades como: "verde", "rojo", "azul" y no implican un orden entre ellas entonces no es posible.
 
-Dentro de las variables que tenemos en el data set de películas, ninguna se puede traducir a números ordenados puesto que las variables no ordenadas son.
+Dentro de las variables que tenemos en el data set de películas, ninguna se puede traducir a números ordenados puesto que las variables no son ordenadas.
 
 
 **3.2. Estudie si es conveniente hacer un Análisis de Componentes Principales. Recuerde que puede usar el índice KMO y el test de esfericidad de Bartlett.**
@@ -241,3 +241,29 @@ No todas las variables que da como resultado el PCA tienen un sentido puesto que
 
 * PC1: Éxito Financiero de una película
 * PC5: Qué tan amigable al público general es la película
+
+# Conclusiones
+
+El clustering de los datos nos indicó que es óptimo separar el conjunto de datos en 3 grupos:
+
+* Group 1: Identificado principalmente por su baja cantidad de dinero presupuestado, en general represeta al conjunto de películas independientes u _underground_.
+* Grupo 3: Representa a todos los blockbusters del cine, proyectos/franquicias enormes con una gran cantidad de presupuesto y en general, duración y cuenta de votos más altos.
+* Grupo 2: El grupo dos representa todas las películas con presupuesto medio/alto cuya principal diferencia respecto al grupo 3 es su popularidad, pues su media es de lejos la más alta en este aspecto.
+
+Pasando al análisis de componentes principales o PCA podemos afirmar que 6 u 8 es el número ideal para la reducción, en este análisis se decidió usar 6 representando así más del 70% de la variabilidad de los datos. Muchas de las variables generadas por el PCA fueron realmente combinaciones lineales solamente sin un claro significado en el mundo real, sin embargo se pudieron encontrar 2 variables que sería interesante explorar más a fondo en otro análisis a futuro:
+
+* PC1: Representando el éxito financiero de una película.
+* PC5: Qué tan amigable al público general es la película.
+
+Regresando al análisis a priori que genera reglas en base a los datos, las dos más interesantes fueron:
+
+* Tener un Budget muy bajo, una popularidad baja pero un voteCount moderado generalmente lleva a un voteAvg bueno! Esta regla se cumple con casi un 90% de confianza y tiene un soporte del 0.0114 en todo el dataset. El soporte puede ser bajo pero es que justamente la regla está hablando de películas underground que normalmente pasan desapercibidas.
+
+* Si tienes un budget muy bajo y un runtime corto no importa que consigas un average de votos bueno, si no logras subir tu popularidad, la data predice que tu revenue será muy bajo con un 99% de confianza y un 0.23 de representación. Por lo tanto esto nos dice que la popularidad es importante!
+
+
+Finalmente nuestras sugerencias principales a CineVisión serían:
+
+* La popularidad de una película es un factor clave en el éxito en revenue obtenido de un proyecto! No escatimen en el marketing y el desarrollo de una historia/proyecto de calidad aunque tengan un budget bajo.
+* Solo hay 3 grupos de proyectos dentro de los datos, existen varias estrategias para entrar a distintas secciones del mercado, intenta enfocarte en uno de los 3 sub-mercados y recuerda, es mejor ser cabeza de ratón que cola de león.
+* En futuros análisis recomendamos investigar cómo se representa el éxito financier de una película respecto a qué tan amigable es para el público general, pueden usar la misma minimización de PCA que utilizamos en este estudio.

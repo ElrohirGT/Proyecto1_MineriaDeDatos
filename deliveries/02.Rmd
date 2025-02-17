@@ -154,6 +154,8 @@ reglas <- apriori(datos_trans, parameter = list(supp = 0.01, conf = 0.8, minlen=
 inspect(sort(reglas, by = "lift", decreasing = TRUE))
 
 ```
+Como se puede ver encuentra muchas reglas dentro del conjunto de datos, sin embargo, varias son subconjuntos de otras reglas que se pueden encontrar más abajo. Lo que lleva a muchas repeticiones.
+
 Algunas reglas interesantes que pude encontrar son por ejemplo:
 
 * Tener un Budget muy bajo, una popularidad baja pero un voteCount moderado generalmente lleva a un voteAvg bueno! Esta regla se cumple con casi un 90% de confianza y tiene un soporte del 0.0114 en todo el dataset. El soporte puede ser bajo pero es que justamente la regla está hablando de películas underground que normalmente pasan desapercibidas.

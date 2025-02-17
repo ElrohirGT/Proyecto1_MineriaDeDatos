@@ -1671,9 +1671,9 @@ generación de reglas. Hágalo y discútalo.</p>
 ## Absolute minimum support count: 100 
 ## 
 ## set item appearances ...[0 item(s)] done [0.00s].
-## set transactions ...[24 item(s), 10000 transaction(s)] done [0.02s].
+## set transactions ...[24 item(s), 10000 transaction(s)] done [0.00s].
 ## sorting and recoding items ... [12 item(s)] done [0.00s].
-## creating transaction tree ... done [0.01s].
+## creating transaction tree ... done [0.00s].
 ## checking subsets of size 1 2 3 4 5 6 done [0.05s].
 ## writing ... [455 rule(s)] done [0.00s].
 ## creating S4 object  ... done [0.00s].</code></pre>
@@ -2980,6 +2980,9 @@ generación de reglas. Hágalo y discútalo.</p>
 ## [455] {budget=Bajo,                                                                          
 ##        runtime=Corto,                                                                        
 ##        popularity=Baja}     =&gt; {voteCount=Pocos}   0.0397  0.8020202   0.0495 0.8295616   397</code></pre>
+<p>Como se puede ver encuentra muchas reglas dentro del conjunto de
+datos, sin embargo, varias son subconjuntos de otras reglas que se
+pueden encontrar más abajo. Lo que lleva a muchas repeticiones.</p>
 <p>Algunas reglas interesantes que pude encontrar son por ejemplo:</p>
 <ul>
 <li><p>Tener un Budget muy bajo, una popularidad baja pero un voteCount

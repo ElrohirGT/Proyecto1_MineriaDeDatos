@@ -122,8 +122,45 @@ aggregate(datos_num[, -ncol(datos_num)], by = list(datos_num$grupo), FUN = mean)
 ```
 Se hizo la separación de los datos en tres grupos como lo recomendaba el método de codo. En la tabla anterior podemos ver como se comporta cada variable en su respectivo cluster, mostrando la media de las variables. Inicialmente con repecto al presupuesto podemos ver 3 distintos valores pero los valores del grupo 2 y 3 no se alejan tanto como si lo hace el valor del grupo 1, estoy puede indicar la cantidad de presupuesto de la pelicula siendo el grupo 1 peliculas con presupuesto bajo y el grupo 2 y 3 con un presupuesto moderado/alto. Se puede ver que en relación al presupuesto invertido la pelicula es más popular, dando a entender que aquellas peliculas que se les otorga un mayor presupuesto pueden ser secuelas o franquicias famosas. Igualmente vemos que las peliculas al ser menos famosas, teniendo un presupuesto bajo se afirma que a su vez menos gente las conoce y por ende tiene menos calificaciones. Es interesante ver que se aprecia una tendencia en que a mayor presupuesto, se tiene una mayor duración; esto indica que la duración de la pelicula se puede dar por muchos factores pero que la cantidad de dinero en producción determina que tan larga puede ser esta.  En las demás categorias se pueden ver muchas similitudes entre en cada uno de los grupos como en la cantidad de géneros o la cantidad de países en donde se rodó la película. Esto es el análisis que se le pudo sacar a los datos en base a las variables analizadas.
 
-# PCA
+# Reglas de Asociación
+Obtenga reglas de asociación interesantes del conjunto de datos usando el algoritmo “A
+priori”. Recuerde discretizar las variables numéricas. Genere reglas con diferentes niveles
+de confianza y soporte. Discuta los resultados. Si considera que debe eliminar variables porque son muy frecuentes y con eso puede recibir más “insights” de la generación de
+reglas. Hágalo y discútalo.
 
+```{r}
+#install.packages("arules")      # Para ejecutar el algoritmo Apriori
+#install.packages("arulesViz")   # Para visualizar las reglas de asociación
+library(arules)
+library(arulesViz)
+
+datos <- read.csv("../data/movies.csv")
+
+datos$budget <- cut(datos$budget, breaks = 5, labels = c("Muy Bajo", "Bajo", "Medio", "Alto", "Muy Alto"))
+datos$revenue <- cut(datos$revenue, breaks = 5, labels = c("Muy Bajo", "Bajo", "Medio", "Alto", "Muy Alto"))
+datos$runtime <- cut(datos$runtime, breaks = 3, labels = c("Corto", "Medio", "Largo"))
+datos$popularity <- cut(datos$popularity, breaks = 4, labels = c("Baja", "Media", "Alta", "Muy Alta"))
+datos$voteAvg <- cut(datos$voteAvg, breaks = 3, labels = c("Mala", "Regular", "Buena"))
+datos$voteCount <- cut(datos$voteCount, breaks = 4, labels = c("Pocos", "Moderados", "Muchos", "Masivos"))
+
+datos <- datos[c("budget", "revenue", "runtime", "popularity", "voteAvg", "voteCount")]
+
+# Convertir a transacciones
+datos_trans <- as(datos, "transactions")
+
+reglas <- apriori(datos_trans, parameter = list(supp = 0.01, conf = 0.8, minlen=2))
+
+#inspect(reglas)
+inspect(sort(reglas, by = "lift", decreasing = TRUE))
+
+```
+Algunas reglas interesantes que pude encontrar son por ejemplo:
+
+* Tener un Budget muy bajo, una popularidad baja pero un voteCount moderado generalmente lleva a un voteAvg bueno! Esta regla se cumple con casi un 90% de confianza y tiene un soporte del 0.0114 en todo el dataset. El soporte puede ser bajo pero es que justamente la regla está hablando de películas underground que normalmente pasan desapercibidas.
+
+* Aunque tengas un budget muy bajo y un runtime corto si tu popularidad tambiés es baja no importa que tu average de votos sea bueno, la data predice que tu revenue será muy bajo con un 99% de confianza y un 0.23 de representación. Por lo tanto esto nos dice que la popularidad es importante!
+
+# PCA
 
 **3.1. Estudie si es posible hacer transformaciones en las variables categóricas para incluirlas en
 el PCA, ¿valdrá la pena?**
@@ -185,4 +222,20 @@ fviz_contrib(pca_result, choice = "var", axes = 1)
 fviz_contrib(pca_result, choice = "var", axes = 2)
 
 ```
+Como se puede ver por el resultado del PCA, se puede explicar más del 70% de la varianza usando las primeras 6 variables. Obteniendo las cargas factoriales tenemos:
+```{r}
+loadings <- pca_result$rotation[,1:6]
+print(loadings)
+```
 
+PC1: Budget, Revenue, VoteCount
+PC2: Id, Popularity, ActorsAmount
+PC3: ProductionCountriesAmount, Runtime, VoteAVG
+PC4: VoteAVG, ProductionCountriesAmount
+PC5: GenresAmount, ProductionCoAmount
+PC6: ActorsAmount, ProductionCountriesAmount
+
+No todas las variables que da como resultado el PCA tienen un sentido puesto que realmente es solo una forma de minimizar el espacio en el que estamos trabajando los datos. Sin embargo algunas interpretaciones que veo por las componentes principales de cada variable superior son:
+
+* PC1: Éxito Financiero de una película
+* PC5: Qué tan amigable al público general es la película
